@@ -7,7 +7,7 @@ This project combines a React SPA frontend with a powerful Cloudflare Worker API
 ### Frontend (React SPA)
 - **React 19** with TypeScript
 - **Vite** for development and build tooling
-- **ESLint** for code linting
+- **Biome** for code formatting and linting
 - **SWC** for fast refresh during development
 
 ### Backend (Cloudflare Worker - HONC Stack)
@@ -18,6 +18,7 @@ This project combines a React SPA frontend with a powerful Cloudflare Worker API
 - **Zod** - Runtime type validation and OpenAPI schema generation
 - **Fiberplane** - API explorer and testing interface
 - **Vitest** - Unit and integration testing with Cloudflare Workers pool
+- **Biome** - Fast code formatting and linting
 
 ## Getting Started
 
@@ -59,8 +60,8 @@ pnpm worker:test:watch # Run worker tests in watch mode
 
 ### Code Quality
 ```bash
-pnpm worker:lint   # Lint and fix worker code with Biome
-pnpm worker:format # Format worker code with Biome
+pnpm lint   # Lint and fix all code with Biome
+pnpm format # Format all code with Biome
 ```
 
 ### Production Deployment
@@ -142,69 +143,46 @@ The worker provides a full-featured REST API with:
 │   ├── drizzle/           # Database utilities and migrations
 │   ├── drizzle.config.ts  # Drizzle configuration
 │   ├── vitest.config.ts   # Test configuration
-│   ├── biome.json         # Code formatting configuration
 │   └── seed.ts            # Database seeding script
 ├── wrangler.jsonc         # Cloudflare Worker configuration
+├── biome.json             # Code formatting and linting configuration  
 └── package.json           # Project dependencies and scripts
 ```
 
-## Expanding the ESLint configuration
+## Code Quality with Biome
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+This project uses [Biome](https://biomejs.dev/) for fast code formatting and linting across both frontend and backend code.
 
-```js
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+### Configuration
 
-      // Remove tseslint.configs.recommended and replace with this
-      ...tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      ...tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      ...tseslint.configs.stylisticTypeChecked,
+The `biome.json` configuration includes:
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+- **Unified formatting** for TypeScript, JavaScript, and JSON files
+- **Import organization** with automatic sorting
+- **React-specific linting** including accessibility rules
+- **Consistent code style** with single quotes and ES5 trailing commas
+- **Console logging** allowed in tests, seeds, and configuration files
+
+### Usage
+
+```bash
+# Format all code
+pnpm format
+
+# Lint and auto-fix all code  
+pnpm lint
+
+# Check specific files
+pnpm biome check src/
+
+# Format specific files
+pnpm biome format --write src/
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+### Key Features
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+- **Fast performance** - significantly faster than ESLint
+- **Built-in formatter** - no need for separate Prettier
+- **TypeScript-first** - excellent TypeScript support out of the box
+- **Import organization** - automatically sorts and organizes imports
+- **Accessibility checking** - built-in a11y rules for React components

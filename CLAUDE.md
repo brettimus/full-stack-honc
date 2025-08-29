@@ -25,45 +25,11 @@ This is a full-stack web application that combines a React SPA frontend with a p
 
 ## Project Structure
 
-```
-hackday-cf-vite-setup/
-├── src/                          # React SPA Frontend
-│   ├── components/
-│   │   ├── ApiStatus.tsx         # API health check component
-│   │   ├── UserForm.tsx          # User creation form
-│   │   └── UserList.tsx          # User display and management
-│   ├── api.ts                    # Type-safe API client
-│   ├── types.ts                  # TypeScript type definitions
-│   ├── App.tsx                   # Main React application
-│   ├── App.css                   # Application styles
-│   ├── index.css                 # Global styles
-│   └── main.tsx                  # React entry point
-├── worker/                       # Cloudflare Worker Backend
-│   ├── src/
-│   │   ├── db/
-│   │   │   └── schema.ts         # Drizzle database schema
-│   │   ├── dtos/
-│   │   │   └── index.ts          # Zod validation schemas
-│   │   ├── middleware/
-│   │   │   ├── dbProvider.ts     # D1 database middleware
-│   │   │   └── validator.ts      # Request validation middleware
-│   │   └── index.ts              # Main Hono application
-│   ├── tests/
-│   │   ├── env.d.ts              # Test environment types
-│   │   ├── setup.ts              # Test database setup
-│   │   └── index.spec.ts         # API endpoint tests
-│   ├── drizzle/
-│   │   ├── local.ts              # Local D1 database utilities
-│   │   ├── remote.ts             # Remote database utilities
-│   │   └── migrations/           # Database migration files
-│   ├── drizzle.config.ts         # Drizzle ORM configuration
-│   ├── vitest.config.ts          # Test configuration
-│   ├── biome.json                # Code formatting rules
-│   └── seed.ts                   # Database seeding script
-├── wrangler.jsonc                # Cloudflare Worker configuration
-├── package.json                  # Dependencies and scripts
-└── README.md                     # Project documentation
-```
+This is a full-stack HONC application with:
+- **`src/`** - React SPA frontend with TypeScript
+- **`worker/`** - Cloudflare Worker API with Hono framework, D1 database, and comprehensive testing
+
+For detailed project structure, development commands, and deployment instructions, see the [README.md](./README.md).
 
 ## Key Technologies
 
@@ -71,7 +37,7 @@ hackday-cf-vite-setup/
 - **React 19**: Latest React with concurrent features
 - **TypeScript**: Type safety and developer experience
 - **Vite**: Fast build tool with HMR
-- **ESLint**: Code linting for quality
+- **Biome**: Fast code formatting and linting
 
 ### Backend Stack
 - **Hono**: High-performance web framework
@@ -81,7 +47,7 @@ hackday-cf-vite-setup/
 - **hono-openapi**: OpenAPI specification generation
 - **Fiberplane**: Interactive API explorer
 - **Vitest**: Testing framework with Workers integration
-- **Biome**: Fast code formatter and linter
+- **Biome**: Fast code formatting and linting for entire codebase
 
 ## Development Workflow
 
@@ -106,8 +72,8 @@ pnpm db:studio                  # Open Drizzle Studio (database GUI)
 ```bash
 pnpm worker:test                # Run API tests
 pnpm worker:test:watch          # Run tests in watch mode
-pnpm worker:lint                # Lint and fix worker code
-pnpm worker:format              # Format worker code
+pnpm lint                       # Lint and fix all code with Biome
+pnpm format                     # Format all code with Biome
 ```
 
 ### Production Deployment
@@ -169,8 +135,10 @@ CREATE UNIQUE INDEX emailUniqueIndex ON users(LOWER(email));
 - **`vitest.config.ts`**: Test configuration
   - Cloudflare Workers pool integration
   - D1 database testing setup
-- **`biome.json`**: Code quality configuration
-  - Formatting rules and linting settings
+- **`biome.json`**: Code formatting and linting configuration  
+  - Unified formatting and linting for all TypeScript, JavaScript, and JSON files
+  - Import organization and React accessibility rules
+  - Local schema reference for offline support
 
 ## Common Tasks
 
