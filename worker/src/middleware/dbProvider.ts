@@ -1,5 +1,5 @@
-import { type DrizzleD1Database, drizzle } from "drizzle-orm/d1";
-import { createMiddleware } from "hono/factory";
+import { type DrizzleD1Database, drizzle } from 'drizzle-orm/d1';
+import { createMiddleware } from 'hono/factory';
 
 export const dbProvider = createMiddleware<{
   Bindings: {
@@ -10,9 +10,9 @@ export const dbProvider = createMiddleware<{
   };
 }>(async (c, next) => {
   const db = drizzle(c.env.DB, {
-    casing: "snake_case",
+    casing: 'snake_case',
   });
 
-  c.set("db", db);
+  c.set('db', db);
   await next();
 });

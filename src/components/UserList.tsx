@@ -11,7 +11,9 @@ export function UserList({ users, onDeleteUser, isDeleting }: UserListProps) {
     return (
       <div className="user-list">
         <h3>Users</h3>
-        <p className="empty-state">No users found. Create your first user above!</p>
+        <p className="empty-state">
+          No users found. Create your first user above!
+        </p>
       </div>
     );
   }
@@ -30,6 +32,7 @@ export function UserList({ users, onDeleteUser, isDeleting }: UserListProps) {
               </p>
             </div>
             <button
+              type="button"
               onClick={() => onDeleteUser(user.id)}
               disabled={isDeleting === user.id}
               className="delete-button"

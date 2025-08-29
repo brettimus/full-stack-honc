@@ -1,7 +1,9 @@
-import { type Client } from "@libsql/client";
-import { drizzle } from "drizzle-orm/libsql";
+import type { Client } from '@libsql/client';
+import { drizzle } from 'drizzle-orm/libsql';
 
-type RemoteDrizzleClient = ReturnType<typeof drizzle<Record<string, never>, Client>>;
+type RemoteDrizzleClient = ReturnType<
+  typeof drizzle<Record<string, never>, Client>
+>;
 
 /**
  * Creates a Drizzle client for remote database operations
@@ -11,14 +13,14 @@ type RemoteDrizzleClient = ReturnType<typeof drizzle<Record<string, never>, Clie
  */
 export const createRemoteDrizzleClient = (
   databaseUrl: string,
-  authToken: string,
+  authToken: string
 ): RemoteDrizzleClient => {
   const client = drizzle({
     connection: {
       url: databaseUrl,
       authToken: authToken,
     },
-    casing: "snake_case",
+    casing: 'snake_case',
   });
 
   return client;

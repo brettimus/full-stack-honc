@@ -306,12 +306,12 @@
   .app {
     padding: 1rem;
   }
-  
+
   .app-content {
     grid-template-columns: 1fr;
     gap: 1rem;
   }
-  
+
   .api-links {
     flex-direction: column;
   }

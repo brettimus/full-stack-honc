@@ -1,65 +1,65 @@
-import { createFiberplane } from "@fiberplane/hono";
-import { eq } from "drizzle-orm";
-import { Hono } from "hono";
-import { describeRoute, openAPISpecs } from "hono-openapi";
-import { resolver } from "hono-openapi/zod";
-import { HTTPException } from "hono/http-exception";
-import * as schema from "./db/schema";
-import { ZUserByIDParams, ZUserInsert, ZUserSelect } from "./dtos";
-import { dbProvider } from "./middleware/dbProvider";
-import { zodValidator } from "./middleware/validator";
+import { createFiberplane } from '@fiberplane/hono';
+import { eq } from 'drizzle-orm';
+import { Hono } from 'hono';
+import { HTTPException } from 'hono/http-exception';
+import { describeRoute, openAPISpecs } from 'hono-openapi';
+import { resolver } from 'hono-openapi/zod';
+import * as schema from './db/schema';
+import { ZUserByIDParams, ZUserInsert, ZUserSelect } from './dtos';
+import { dbProvider } from './middleware/dbProvider';
+import { zodValidator } from './middleware/validator';
 
 const api = new Hono()
-  .use("*", dbProvider)
+  .use('*', dbProvider)
   .get(
-    "/health",
+    '/health',
     describeRoute({
       responses: {
         200: {
-          description: "API health check successful",
+          description: 'API health check successful',
           content: {
-            "application/json": {
+            'application/json': {
               schema: {
-                type: "object",
+                type: 'object',
                 properties: {
-                  status: { type: "string" },
-                  timestamp: { type: "string" },
-                  database: { type: "string" }
-                }
-              }
-            }
-          }
-        }
-      }
+                  status: { type: 'string' },
+                  timestamp: { type: 'string' },
+                  database: { type: 'string' },
+                },
+              },
+            },
+          },
+        },
+      },
     }),
     async (c) => {
       const db = c.var.db;
-      
+
       // Test database connection
       try {
         await db.select().from(schema.users).limit(1);
         return c.json({
-          status: "healthy",
+          status: 'healthy',
           timestamp: new Date().toISOString(),
-          database: "connected"
+          database: 'connected',
         });
-      } catch (error) {
+      } catch (_error) {
         return c.json({
-          status: "healthy",
+          status: 'healthy',
           timestamp: new Date().toISOString(),
-          database: "error"
+          database: 'error',
         });
       }
     }
   )
   .get(
-    "/users",
+    '/users',
     describeRoute({
       responses: {
         200: {
-          description: "Users queried successfully",
+          description: 'Users queried successfully',
           content: {
-            "application/json": {
+            'application/json': {
               schema: resolver(ZUserSelect.array()),
             },
           },
@@ -71,16 +71,16 @@ const api = new Hono()
       const users = await db.select().from(schema.users);
 
       return c.json(users);
-    },
+    }
   )
   .post(
-    "/users",
+    '/users',
     describeRoute({
       responses: {
         201: {
-          description: "User created successfully",
+          description: 'User created successfully',
           content: {
-            "application/json": {
+            'application/json': {
               schema: resolver(ZUserSelect),
             },
           },
@@ -91,10 +91,10 @@ const api = new Hono()
      * Add request data to the OpenAPI spec through
      * validators, not `describeRoute` options
      */
-    zodValidator("json", ZUserInsert),
+    zodValidator('json', ZUserInsert),
     async (c) => {
       const db = c.var.db;
-      const { name, email } = c.req.valid("json");
+      const { name, email } = c.req.valid('json');
 
       const [newUser] = await db
         .insert(schema.users)
@@ -105,29 +105,29 @@ const api = new Hono()
         .returning();
 
       return c.json(newUser, 201);
-    },
+    }
   )
   .get(
-    "/users/:id",
+    '/users/:id',
     describeRoute({
       responses: {
         200: {
-          description: "User queried by ID successfully",
+          description: 'User queried by ID successfully',
           content: {
-            "application/json": {
+            'application/json': {
               schema: resolver(ZUserSelect),
             },
           },
         },
         404: {
-          description: "User with provided ID not found",
+          description: 'User with provided ID not found',
         },
       },
     }),
-    zodValidator("param", ZUserByIDParams),
+    zodValidator('param', ZUserByIDParams),
     async (c) => {
       const db = c.var.db;
-      const { id } = c.req.valid("param");
+      const { id } = c.req.valid('param');
 
       const [user] = await db
         .select()
@@ -139,33 +139,33 @@ const api = new Hono()
       }
 
       return c.json(user);
-    },
+    }
   )
   .delete(
-    "/users/:id",
+    '/users/:id',
     describeRoute({
       responses: {
         204: {
-          description: "User deleted by ID successfully",
+          description: 'User deleted by ID successfully',
         },
       },
     }),
-    zodValidator("param", ZUserByIDParams),
+    zodValidator('param', ZUserByIDParams),
     async (c) => {
       const db = c.var.db;
-      const { id } = c.req.valid("param");
+      const { id } = c.req.valid('param');
 
       await db.delete(schema.users).where(eq(schema.users.id, id));
 
       return c.body(null, 204);
-    },
+    }
   );
 
 const app = new Hono()
-  .get("/", (c) => {
-    return c.text("Honc from above! ☁️🪿");
+  .get('/', (c) => {
+    return c.text('Honc from above! ☁️🪿');
   })
-  .route("/api", api);
+  .route('/api', api);
 
 app.onError((error, c) => {
   console.error(error);
@@ -174,15 +174,15 @@ app.onError((error, c) => {
       {
         message: error.message,
       },
-      error.status,
+      error.status
     );
   }
 
   return c.json(
     {
-      message: "Something went wrong",
+      message: 'Something went wrong',
     },
-    500,
+    500
   );
 });
 
@@ -190,15 +190,15 @@ app.onError((error, c) => {
  * Generate OpenAPI spec at /openapi.json
  */
 app.get(
-  "/openapi.json",
+  '/openapi.json',
   openAPISpecs(app, {
     documentation: {
       info: {
-        title: "HONC D1 App",
-        version: "1.0.0",
+        title: 'HONC D1 App',
+        version: '1.0.0',
       },
     },
-  }),
+  })
 );
 
 /**
@@ -207,11 +207,11 @@ app.get(
  * Visit the explorer at `/fp`
  */
 app.use(
-  "/fp/*",
+  '/fp/*',
   createFiberplane({
     app,
-    openapi: { url: "/openapi.json" },
-  }),
+    openapi: { url: '/openapi.json' },
+  })
 );
 
 export default app;

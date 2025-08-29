@@ -1,10 +1,10 @@
-import { type SQL, sql } from "drizzle-orm";
+import { type SQL, sql } from 'drizzle-orm';
 import {
   type AnySQLiteColumn,
   sqliteTable,
   text,
   uniqueIndex,
-} from "drizzle-orm/sqlite-core";
+} from 'drizzle-orm/sqlite-core';
 
 const currentTimestamp = () => {
   return sql`(CURRENT_TIMESTAMP)`;
@@ -17,7 +17,7 @@ const lower = (email: AnySQLiteColumn): SQL => {
 export type NewUser = typeof users.$inferInsert;
 
 export const users = sqliteTable(
-  "users",
+  'users',
   {
     // .primaryKey() must be chained before $defaultFn
     id: text()
@@ -32,5 +32,5 @@ export const users = sqliteTable(
    * Ensure case-insensitive uniqueness for email
    * @see https://orm.drizzle.team/docs/guides/unique-case-insensitive-email#sqlite
    */
-  (table) => [uniqueIndex("emailUniqueIndex").on(lower(table.email))],
+  (table) => [uniqueIndex('emailUniqueIndex').on(lower(table.email))]
 );

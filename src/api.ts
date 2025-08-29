@@ -1,4 +1,4 @@
-import type { User, CreateUserRequest, ApiError } from './types';
+import type { ApiError, CreateUserRequest, User } from './types';
 
 interface HealthCheckResponse {
   status: string;

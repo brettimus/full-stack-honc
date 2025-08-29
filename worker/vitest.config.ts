@@ -1,8 +1,8 @@
-import path from "node:path";
+import path from 'node:path';
 import {
   defineWorkersConfig,
   readD1Migrations,
-} from "@cloudflare/vitest-pool-workers/config";
+} from '@cloudflare/vitest-pool-workers/config';
 
 export default defineWorkersConfig(async () => {
   /**
@@ -10,20 +10,20 @@ export default defineWorkersConfig(async () => {
    * in `/tests/setup.ts` to apply migrations before tests run.
    * @see https://github.com/cloudflare/workers-sdk/tree/main/fixtures/vitest-pool-workers-examples/d1
    */
-  const migrationsPath = path.join(__dirname, "drizzle/migrations");
+  const migrationsPath = path.join(__dirname, 'drizzle/migrations');
   const migrations = await readD1Migrations(migrationsPath);
 
   return {
     test: {
-      setupFiles: ["./tests/setup.ts"],
+      setupFiles: ['./tests/setup.ts'],
       globals: true,
       poolOptions: {
         workers: {
-          wrangler: { configPath: "./wrangler.jsonc" },
+          wrangler: { configPath: './wrangler.jsonc' },
           miniflare: {
-            compatibilityFlags: ["nodejs_compat"],
-            compatibilityDate: "2025-08-29",
-            d1Databases: ["DB"],
+            compatibilityFlags: ['nodejs_compat'],
+            compatibilityDate: '2025-08-29',
+            d1Databases: ['DB'],
             bindings: { TEST_MIGRATIONS: migrations },
           },
         },
@@ -31,7 +31,7 @@ export default defineWorkersConfig(async () => {
     },
     build: {
       rollupOptions: {
-        external: ["@fiberplane/hono"],
+        external: ['@fiberplane/hono'],
       },
     },
     ssr: {
@@ -41,9 +41,9 @@ export default defineWorkersConfig(async () => {
        * @see https://github.com/fiberplane/fiberplane/issues/589
        */
       noExternal: [
-        "@sagold/json-pointer",
-        "json-schema-library",
-        "@fiberplane/hono",
+        '@sagold/json-pointer',
+        'json-schema-library',
+        '@fiberplane/hono',
       ],
     },
   };

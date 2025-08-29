@@ -1,9 +1,9 @@
-import { useState, useEffect } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { apiClient } from './api';
+import { ApiStatus } from './components/ApiStatus';
 import { UserForm } from './components/UserForm';
 import { UserList } from './components/UserList';
-import { ApiStatus } from './components/ApiStatus';
-import type { User, CreateUserRequest } from './types';
+import type { CreateUserRequest, User } from './types';
 import './App.css';
 
 function App() {
@@ -13,7 +13,7 @@ function App() {
   const [deletingId, setDeletingId] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  const loadUsers = async () => {
+  const loadUsers = useCallback(async () => {
     try {
       setIsLoading(true);
       setError(null);
@@ -24,16 +24,18 @@ function App() {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, []);
 
   const handleCreateUser = async (userData: CreateUserRequest) => {
     try {
       setIsCreating(true);
       setError(null);
       const newUser = await apiClient.createUser(userData);
-      setUsers(prev => [...prev, newUser]);
+      setUsers((prev) => [...prev, newUser]);
     } catch (error) {
-      setError(error instanceof Error ? error.message : 'Failed to create user');
+      setError(
+        error instanceof Error ? error.message : 'Failed to create user'
+      );
     } finally {
       setIsCreating(false);
     }
@@ -44,9 +46,11 @@ function App() {
       setDeletingId(id);
       setError(null);
       await apiClient.deleteUser(id);
-      setUsers(prev => prev.filter(user => user.id !== id));
+      setUsers((prev) => prev.filter((user) => user.id !== id));
     } catch (error) {
-      setError(error instanceof Error ? error.message : 'Failed to delete user');
+      setError(
+        error instanceof Error ? error.message : 'Failed to delete user'
+      );
     } finally {
       setDeletingId(null);
     }
@@ -54,7 +58,7 @@ function App() {
 
   useEffect(() => {
     loadUsers();
-  }, []);
+  }, [loadUsers]);
 
   return (
     <div className="app">
@@ -65,27 +69,26 @@ function App() {
 
       <main className="app-main">
         <ApiStatus />
-        
+
         {error && (
           <div className="error-message">
             <p>❌ {error}</p>
-            <button onClick={() => setError(null)}>Dismiss</button>
+            <button type="button" onClick={() => setError(null)}>
+              Dismiss
+            </button>
           </div>
         )}
 
         <div className="app-content">
           <div className="form-section">
-            <UserForm 
-              onSubmit={handleCreateUser}
-              isLoading={isCreating}
-            />
+            <UserForm onSubmit={handleCreateUser} isLoading={isCreating} />
           </div>
 
           <div className="list-section">
             {isLoading ? (
               <div className="loading">Loading users...</div>
             ) : (
-              <UserList 
+              <UserList
                 users={users}
                 onDeleteUser={handleDeleteUser}
                 isDeleting={deletingId}

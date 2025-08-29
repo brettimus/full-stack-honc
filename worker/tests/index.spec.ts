@@ -1,8 +1,8 @@
-import { env } from "cloudflare:test";
-import { testClient } from "hono/testing";
-import { beforeAll, describe, expect, it } from "vitest";
+import { env } from 'cloudflare:test';
+import { testClient } from 'hono/testing';
+import { beforeAll, describe, expect, it } from 'vitest';
 
-import app from "../src";
+import app from '../src';
 
 const client = testClient(app, env);
 
@@ -18,30 +18,30 @@ const UUID_REGEX =
  * @see https://github.com/cloudflare/workers-sdk/tree/main/fixtures/vitest-pool-workers-examples/d1
  */
 
-describe("GET /", () => {
-  it("Returns landing text", async () => {
+describe('GET /', () => {
+  it('Returns landing text', async () => {
     const response = await client.index.$get();
     expect(response.status).toBe(200);
 
     const data = await response.text();
-    expect(data).toBe("Honc from above! ☁️🪿");
+    expect(data).toBe('Honc from above! ☁️🪿');
   });
 });
 
-describe("GET /users", () => {
+describe('GET /users', () => {
   beforeAll(async () => {
     const mockUserData = [
       {
-        name: "Wingbert Wigglefeather",
-        email: "wwigglefeather@honc.dev",
+        name: 'Wingbert Wigglefeather',
+        email: 'wwigglefeather@honc.dev',
       },
       {
-        name: "Waddles McPaddle",
-        email: "wmcpaddle@honc.dev",
+        name: 'Waddles McPaddle',
+        email: 'wmcpaddle@honc.dev',
       },
       {
         name: "Squawkers O'Quacker",
-        email: "soquacker@honc.dev",
+        email: 'soquacker@honc.dev',
       },
     ];
 
@@ -50,7 +50,7 @@ describe("GET /users", () => {
     }
   });
 
-  it("Returns an an array of users", async () => {
+  it('Returns an an array of users', async () => {
     const response = await client.api.users.$get();
     expect(response.status).toBe(200);
 
@@ -70,17 +70,17 @@ describe("GET /users", () => {
   });
 });
 
-describe("POST /users", () => {
-  it("Returns 400 if payload is undefined", async () => {
+describe('POST /users', () => {
+  it('Returns 400 if payload is undefined', async () => {
     // biome-ignore lint/suspicious/noExplicitAny: Casting used only to pass invalid argument
     const response = await client.api.users.$post(undefined as any);
     expect(response.status).toBe(400);
   });
 
-  it("Returns 201 and new User if payload is valid", async () => {
+  it('Returns 201 and new User if payload is valid', async () => {
     const mockUserData = {
-      name: "Wingbert Wigglefeather",
-      email: "wwigglefeather@honc.dev",
+      name: 'Wingbert Wigglefeather',
+      email: 'wwigglefeather@honc.dev',
     };
 
     const response = await client.api.users.$post({
@@ -99,13 +99,13 @@ describe("POST /users", () => {
   });
 });
 
-describe("GET /users/:id", () => {
+describe('GET /users/:id', () => {
   let NEW_USER_ID: string;
 
   beforeAll(async () => {
     const mockUserData = {
-      name: "Wingbert Wigglefeather",
-      email: "wwigglefeather@honc.dev",
+      name: 'Wingbert Wigglefeather',
+      email: 'wwigglefeather@honc.dev',
     };
 
     const response = await client.api.users.$post({
@@ -116,8 +116,8 @@ describe("GET /users/:id", () => {
     NEW_USER_ID = id;
   });
 
-  it("Returns 200 and User matching valid ID", async () => {
-    const response = await client.api.users[":id"].$get({
+  it('Returns 200 and User matching valid ID', async () => {
+    const response = await client.api.users[':id'].$get({
       param: { id: NEW_USER_ID },
     });
 
@@ -134,13 +134,13 @@ describe("GET /users/:id", () => {
   });
 });
 
-describe("DELETE /users/:id", () => {
+describe('DELETE /users/:id', () => {
   let NEW_USER_ID: string;
 
   beforeAll(async () => {
     const mockUserData = {
-      name: "Wingbert Wigglefeather",
-      email: "wwigglefeather@honc.dev",
+      name: 'Wingbert Wigglefeather',
+      email: 'wwigglefeather@honc.dev',
     };
 
     const response = await client.api.users.$post({
@@ -151,14 +151,14 @@ describe("DELETE /users/:id", () => {
     NEW_USER_ID = id;
   });
 
-  it("Returns 204 after deleting User matching valid ID", async () => {
-    const response = await client.api.users[":id"].$delete({
+  it('Returns 204 after deleting User matching valid ID', async () => {
+    const response = await client.api.users[':id'].$delete({
       param: { id: NEW_USER_ID },
     });
 
     expect(response.status).toBe(204);
 
-    const confirmation = await client.api.users[":id"].$get({
+    const confirmation = await client.api.users[':id'].$get({
       param: { id: NEW_USER_ID },
     });
 

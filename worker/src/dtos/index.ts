@@ -1,16 +1,16 @@
-import { createInsertSchema, createSelectSchema } from "drizzle-zod";
-import { z } from "zod";
-import "zod-openapi/extend";
-import * as schema from "../db/schema";
+import { createInsertSchema, createSelectSchema } from 'drizzle-zod';
+import { z } from 'zod';
+import 'zod-openapi/extend';
+import * as schema from '../db/schema';
 
 export const ZUserInsert = createInsertSchema(schema.users, {
   name: (schema) =>
     schema.openapi({
-      example: "Goose McCloud",
+      example: 'Goose McCloud',
     }),
   email: (schema) =>
     schema.email().openapi({
-      example: "goose@honc.dev",
+      example: 'goose@honc.dev',
     }),
 })
   .pick({
@@ -18,40 +18,40 @@ export const ZUserInsert = createInsertSchema(schema.users, {
     email: true,
   })
   .openapi({
-    ref: "UserInsert",
+    ref: 'UserInsert',
   });
 
 export const ZUserSelect = createSelectSchema(schema.users, {
   id: (schema) =>
     schema.uuid().openapi({
-      example: "3e0bb3d0-2074-4a1e-6263-d13dd10cb0cf",
+      example: '3e0bb3d0-2074-4a1e-6263-d13dd10cb0cf',
     }),
   name: (schema) =>
     schema.openapi({
-      example: "Goose McCloud",
+      example: 'Goose McCloud',
     }),
   email: (schema) =>
     schema.email().openapi({
-      example: "goose@honc.dev",
+      example: 'goose@honc.dev',
     }),
   createdAt: (schema) =>
     schema.openapi({
-      example: "2025-05-15 04:13:29",
+      example: '2025-05-15 04:13:29',
     }),
   updatedAt: (schema) =>
     schema.openapi({
-      example: "2025-05-15 04:13:29",
+      example: '2025-05-15 04:13:29',
     }),
 }).openapi({
-  ref: "UserSelect",
+  ref: 'UserSelect',
 });
 
 export const ZUserByIDParams = z
   .object({
     id: z.string().uuid().openapi({
-      example: "3e0bb3d0-2074-4a1e-6263-d13dd10cb0cf",
+      example: '3e0bb3d0-2074-4a1e-6263-d13dd10cb0cf',
     }),
   })
   .openapi({
-    ref: "UserByIdParams",
+    ref: 'UserByIdParams',
   });
