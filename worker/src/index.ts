@@ -12,6 +12,47 @@ import { zodValidator } from "./middleware/validator";
 const api = new Hono()
   .use("*", dbProvider)
   .get(
+    "/health",
+    describeRoute({
+      responses: {
+        200: {
+          description: "API health check successful",
+          content: {
+            "application/json": {
+              schema: {
+                type: "object",
+                properties: {
+                  status: { type: "string" },
+                  timestamp: { type: "string" },
+                  database: { type: "string" }
+                }
+              }
+            }
+          }
+        }
+      }
+    }),
+    async (c) => {
+      const db = c.var.db;
+      
+      // Test database connection
+      try {
+        await db.select().from(schema.users).limit(1);
+        return c.json({
+          status: "healthy",
+          timestamp: new Date().toISOString(),
+          database: "connected"
+        });
+      } catch (error) {
+        return c.json({
+          status: "healthy",
+          timestamp: new Date().toISOString(),
+          database: "error"
+        });
+      }
+    }
+  )
+  .get(
     "/users",
     describeRoute({
       responses: {

@@ -1,45 +1,318 @@
-#root {
-	max-width: 1280px;
-	margin: 0 auto;
-	padding: 2rem;
-	text-align: center;
+.app {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
 }
 
-.logo {
-	height: 6em;
-	padding: 1.5em;
-	will-change: filter;
-	transition: filter 300ms;
-}
-.logo:hover {
-	filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-	filter: drop-shadow(0 0 2em #61dafbaa);
-}
-.logo.cloudflare:hover {
-	filter: drop-shadow(0 0 2em #f6821faa);
+.app-header {
+  text-align: center;
+  margin-bottom: 2rem;
+  border-bottom: 1px solid #333;
+  padding-bottom: 1rem;
 }
 
-@keyframes logo-spin {
-	from {
-		transform: rotate(0deg);
-	}
-	to {
-		transform: rotate(360deg);
-	}
+.app-header h1 {
+  margin: 0;
+  color: #f6821f;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-	a:nth-of-type(2) .logo {
-		animation: logo-spin infinite 20s linear;
-	}
+.app-header p {
+  margin: 0.5rem 0 0;
+  color: #888;
 }
 
-.card {
-	padding: 2em;
+.app-main {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
 }
 
-.read-the-docs {
-	color: #888;
+.app-content {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 2rem;
+  align-items: start;
+}
+
+/* API Status */
+.api-status {
+  background: #1a1a1a;
+  border: 1px solid #333;
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.api-status h3 {
+  margin-top: 0;
+  color: #f6821f;
+}
+
+.status-button {
+  background: #646cff;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-bottom: 1rem;
+}
+
+.status-button:hover:not(:disabled) {
+  background: #535bf2;
+}
+
+.status-button:disabled {
+  background: #666;
+  cursor: not-allowed;
+}
+
+.status-result {
+  padding: 1rem;
+  border-radius: 4px;
+  margin-top: 1rem;
+}
+
+.status-result.success {
+  background: #0f2313;
+  border: 1px solid #10b981;
+  color: #34d399;
+}
+
+.status-result.error {
+  background: #2d1b1b;
+  border: 1px solid #dc2626;
+  color: #f87171;
+}
+
+.health-details {
+  margin-top: 0.5rem;
+  padding-top: 0.5rem;
+  border-top: 1px solid #333;
+}
+
+.health-details p {
+  margin: 0.25rem 0;
+}
+
+.api-links {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.api-links a {
+  color: #646cff;
+  text-decoration: none;
+  padding: 0.25rem 0.5rem;
+  border: 1px solid #646cff;
+  border-radius: 4px;
+  font-size: 0.875rem;
+}
+
+.api-links a:hover {
+  background: #646cff;
+  color: white;
+}
+
+/* Error Messages */
+.error-message {
+  background: #2d1b1b;
+  border: 1px solid #dc2626;
+  border-radius: 8px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.error-message p {
+  margin: 0;
+  color: #f87171;
+}
+
+.error-message button {
+  background: transparent;
+  color: #f87171;
+  border: 1px solid #f87171;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.error-message button:hover {
+  background: #f87171;
+  color: #2d1b1b;
+}
+
+/* User Form */
+.user-form {
+  background: #1a1a1a;
+  border: 1px solid #333;
+  border-radius: 8px;
+  padding: 1.5rem;
+}
+
+.user-form h3 {
+  margin-top: 0;
+  color: #f6821f;
+}
+
+.form-group {
+  margin-bottom: 1rem;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: #ccc;
+  font-weight: 500;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #333;
+  border-radius: 4px;
+  background: #242424;
+  color: white;
+  box-sizing: border-box;
+}
+
+.form-group input:focus {
+  outline: none;
+  border-color: #646cff;
+}
+
+.form-group input:disabled {
+  background: #1a1a1a;
+  color: #666;
+}
+
+.user-form button {
+  background: #646cff;
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 500;
+  width: 100%;
+}
+
+.user-form button:hover:not(:disabled) {
+  background: #535bf2;
+}
+
+.user-form button:disabled {
+  background: #666;
+  cursor: not-allowed;
+}
+
+/* User List */
+.user-list {
+  background: #1a1a1a;
+  border: 1px solid #333;
+  border-radius: 8px;
+  padding: 1.5rem;
+}
+
+.user-list h3 {
+  margin-top: 0;
+  color: #f6821f;
+}
+
+.empty-state {
+  text-align: center;
+  color: #888;
+  padding: 2rem;
+  font-style: italic;
+}
+
+.users-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.user-card {
+  background: #242424;
+  border: 1px solid #333;
+  border-radius: 6px;
+  padding: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  transition: border-color 0.2s;
+}
+
+.user-card:hover {
+  border-color: #646cff;
+}
+
+.user-info {
+  flex: 1;
+}
+
+.user-info h4 {
+  margin: 0 0 0.5rem 0;
+  color: white;
+  font-size: 1.1rem;
+}
+
+.user-email {
+  margin: 0 0 0.5rem 0;
+  color: #646cff;
+  font-family: monospace;
+}
+
+.user-date {
+  margin: 0;
+  color: #888;
+  font-size: 0.875rem;
+}
+
+.delete-button {
+  background: transparent;
+  border: 1px solid #dc2626;
+  color: #dc2626;
+  padding: 0.5rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: all 0.2s;
+}
+
+.delete-button:hover:not(:disabled) {
+  background: #dc2626;
+  color: white;
+}
+
+.delete-button:disabled {
+  border-color: #666;
+  color: #666;
+  cursor: not-allowed;
+}
+
+.loading {
+  text-align: center;
+  color: #888;
+  padding: 2rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .app {
+    padding: 1rem;
+  }
+  
+  .app-content {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  
+  .api-links {
+    flex-direction: column;
+  }
 }

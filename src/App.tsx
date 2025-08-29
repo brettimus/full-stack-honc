@@ -1,58 +1,101 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import cloudflareLogo from './assets/Cloudflare_Logo.svg'
-import './App.css'
+import { useState, useEffect } from 'react';
+import { apiClient } from './api';
+import { UserForm } from './components/UserForm';
+import { UserList } from './components/UserList';
+import { ApiStatus } from './components/ApiStatus';
+import type { User, CreateUserRequest } from './types';
+import './App.css';
 
 function App() {
-  const [count, setCount] = useState(0)
-  const [name, setName] = useState('unknown')
+  const [users, setUsers] = useState<User[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isCreating, setIsCreating] = useState(false);
+  const [deletingId, setDeletingId] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
+
+  const loadUsers = async () => {
+    try {
+      setIsLoading(true);
+      setError(null);
+      const userData = await apiClient.getUsers();
+      setUsers(userData);
+    } catch (error) {
+      setError(error instanceof Error ? error.message : 'Failed to load users');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleCreateUser = async (userData: CreateUserRequest) => {
+    try {
+      setIsCreating(true);
+      setError(null);
+      const newUser = await apiClient.createUser(userData);
+      setUsers(prev => [...prev, newUser]);
+    } catch (error) {
+      setError(error instanceof Error ? error.message : 'Failed to create user');
+    } finally {
+      setIsCreating(false);
+    }
+  };
+
+  const handleDeleteUser = async (id: string) => {
+    try {
+      setDeletingId(id);
+      setError(null);
+      await apiClient.deleteUser(id);
+      setUsers(prev => prev.filter(user => user.id !== id));
+    } catch (error) {
+      setError(error instanceof Error ? error.message : 'Failed to delete user');
+    } finally {
+      setDeletingId(null);
+    }
+  };
+
+  useEffect(() => {
+    loadUsers();
+  }, []);
 
   return (
-    <>
-      <div>
-        <a href='https://vite.dev' target='_blank'>
-          <img src={viteLogo} className='logo' alt='Vite logo' />
-        </a>
-        <a href='https://react.dev' target='_blank'>
-          <img src={reactLogo} className='logo react' alt='React logo' />
-        </a>
-        <a href='https://workers.cloudflare.com/' target='_blank'>
-          <img src={cloudflareLogo} className='logo cloudflare' alt='Cloudflare logo' />
-        </a>
-      </div>
-      <h1>Vite + React + Cloudflare</h1>
-      <div className='card'>
-        <button
-          onClick={() => setCount((count) => count + 1)}
-          aria-label='increment'
-        >
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <div className='card'>
-        <button
-          onClick={() => {
-            fetch('/api/')
-              .then((res) => res.json() as Promise<{ name: string }>)
-              .then((data) => setName(data.name))
-          }}
-          aria-label='get name'
-        >
-          Name from API is: {name}
-        </button>
-        <p>
-          Edit <code>worker/index.ts</code> to change the name
-        </p>
-      </div>
-      <p className='read-the-docs'>
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    <div className="app">
+      <header className="app-header">
+        <h1>🪿 HONC User Management</h1>
+        <p>React SPA + Cloudflare Worker with D1 Database</p>
+      </header>
+
+      <main className="app-main">
+        <ApiStatus />
+        
+        {error && (
+          <div className="error-message">
+            <p>❌ {error}</p>
+            <button onClick={() => setError(null)}>Dismiss</button>
+          </div>
+        )}
+
+        <div className="app-content">
+          <div className="form-section">
+            <UserForm 
+              onSubmit={handleCreateUser}
+              isLoading={isCreating}
+            />
+          </div>
+
+          <div className="list-section">
+            {isLoading ? (
+              <div className="loading">Loading users...</div>
+            ) : (
+              <UserList 
+                users={users}
+                onDeleteUser={handleDeleteUser}
+                isDeleting={deletingId}
+              />
+            )}
+          </div>
+        </div>
+      </main>
+    </div>
+  );
 }
 
-export default App
+export default App;

@@ -1,6 +1,6 @@
 import { config } from "dotenv";
 import { defineConfig } from "drizzle-kit";
-import { getLocalD1DbPath } from "./drizzle/local";
+import { getLocalD1DbPath } from "./worker/drizzle/local";
 
 let dbConfig: ReturnType<typeof defineConfig>;
 
