@@ -1,4 +1,9 @@
-import type { ApiError, CreateUserRequest, User } from './types';
+import type {
+  ApiError,
+  CreateCommentRequest,
+  CommentWithUser,
+  User,
+} from './types';
 
 interface HealthCheckResponse {
   status: string;
@@ -40,19 +45,37 @@ class ApiClient {
     return this.request<User[]>('/users');
   }
 
-  async createUser(user: CreateUserRequest): Promise<User> {
-    return this.request<User>('/users', {
-      method: 'POST',
-      body: JSON.stringify(user),
-    });
-  }
-
   async getUserById(id: string): Promise<User> {
     return this.request<User>(`/users/${id}`);
   }
 
-  async deleteUser(id: string): Promise<void> {
-    return this.request<void>(`/users/${id}`, {
+  async getComments(): Promise<CommentWithUser[]> {
+    return this.request<CommentWithUser[]>('/comments');
+  }
+
+  async createComment(comment: CreateCommentRequest): Promise<CommentWithUser> {
+    return this.request<CommentWithUser>('/comments', {
+      method: 'POST',
+      body: JSON.stringify(comment),
+    });
+  }
+
+  async getCommentById(id: string): Promise<CommentWithUser> {
+    return this.request<CommentWithUser>(`/comments/${id}`);
+  }
+
+  async updateComment(
+    id: string,
+    comment: Partial<CreateCommentRequest>
+  ): Promise<CommentWithUser> {
+    return this.request<CommentWithUser>(`/comments/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(comment),
+    });
+  }
+
+  async deleteComment(id: string): Promise<void> {
+    return this.request<void>(`/comments/${id}`, {
       method: 'DELETE',
     });
   }

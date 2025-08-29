@@ -12,6 +12,9 @@
     "run_worker_first": ["/openapi.json", "/api/*", "/fp", "/fp/*"],
     "not_found_handling": "single-page-application"
   },
+  "vars": {
+    "BETTER_AUTH_URL": "https://hackday-cf-vite-setup.your-subdomain.workers.dev"
+  },
   "observability": {
     "enabled": true
   },

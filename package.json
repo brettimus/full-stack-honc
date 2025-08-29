@@ -19,6 +19,7 @@
     "db:seed:prod": "ENVIRONMENT=production tsx worker/seed.ts",
     "db:setup": "pnpm run db:touch && pnpm run db:generate && pnpm run db:migrate && pnpm run db:seed",
     "db:studio": "drizzle-kit studio",
+    "auth:generate": "pnpx @better-auth/cli generate --config ./better-auth.config.ts --output ./worker/src/db/auth.ts",
     "worker:dev": "wrangler dev worker/src/index.ts",
     "worker:deploy": "wrangler deploy --minify worker/src/index.ts",
     "worker:test": "vitest run --config worker/vitest.config.ts",
@@ -26,17 +27,20 @@
   },
   "dependencies": {
     "@fiberplane/hono": "0.5.2",
+    "better-auth": "^1.3.7",
     "dotenv": "^16.4.7",
     "drizzle-orm": "^0.43.1",
     "drizzle-zod": "^0.7.1",
     "hono": "^4.7.0",
     "hono-openapi": "^0.4.6",
+    "jose": "^6.0.11",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
     "zod": "^3.23.8",
     "zod-openapi": "^4.2.4"
   },
   "devDependencies": {
+    "@better-auth/cli": "^1.2.12",
     "@biomejs/biome": "2.2.2",
     "@cloudflare/vite-plugin": "^1.12.1",
     "@cloudflare/vitest-pool-workers": "^0.8.31",

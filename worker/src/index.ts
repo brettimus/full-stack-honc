@@ -5,11 +5,37 @@ import { HTTPException } from 'hono/http-exception';
 import { describeRoute, openAPISpecs } from 'hono-openapi';
 import { resolver } from 'hono-openapi/zod';
 import * as schema from './db/schema';
-import { ZUserByIDParams, ZUserInsert, ZUserSelect } from './dtos';
+import {
+  ZUserByIDParams,
+  ZUserSelect,
+  ZCommentInsert,
+  ZCommentUpdate,
+  ZCommentByIDParams,
+  ZCommentWithUser,
+} from './dtos';
+import { createAuth } from './lib/auth';
+import { authMiddleware } from './middleware/auth';
 import { dbProvider } from './middleware/dbProvider';
 import { zodValidator } from './middleware/validator';
 
-const api = new Hono()
+interface Env {
+  DB: D1Database;
+  BETTER_AUTH_URL: string;
+  BETTER_AUTH_SECRET: string;
+  GITHUB_CLIENT_ID?: string;
+  GITHUB_CLIENT_SECRET?: string;
+}
+
+type Variables = {
+  user: {
+    id: string;
+    name: string;
+    email?: string;
+    githubUsername?: string;
+  };
+};
+
+const api = new Hono<{ Bindings: Env; Variables: Variables }>()
   .use('*', dbProvider)
   .get(
     '/health',
@@ -37,7 +63,7 @@ const api = new Hono()
 
       // Test database connection
       try {
-        await db.select().from(schema.users).limit(1);
+        await db.select().from(schema.comments).limit(1);
         return c.json({
           status: 'healthy',
           timestamp: new Date().toISOString(),
@@ -68,43 +94,9 @@ const api = new Hono()
     }),
     async (c) => {
       const db = c.var.db;
-      const users = await db.select().from(schema.users);
+      const users = await db.select().from(schema.user);
 
       return c.json(users);
-    }
-  )
-  .post(
-    '/users',
-    describeRoute({
-      responses: {
-        201: {
-          description: 'User created successfully',
-          content: {
-            'application/json': {
-              schema: resolver(ZUserSelect),
-            },
-          },
-        },
-      },
-    }),
-    /**
-     * Add request data to the OpenAPI spec through
-     * validators, not `describeRoute` options
-     */
-    zodValidator('json', ZUserInsert),
-    async (c) => {
-      const db = c.var.db;
-      const { name, email } = c.req.valid('json');
-
-      const [newUser] = await db
-        .insert(schema.users)
-        .values({
-          name: name,
-          email: email,
-        })
-        .returning();
-
-      return c.json(newUser, 201);
     }
   )
   .get(
@@ -131,8 +123,8 @@ const api = new Hono()
 
       const [user] = await db
         .select()
-        .from(schema.users)
-        .where(eq(schema.users.id, id));
+        .from(schema.user)
+        .where(eq(schema.user.id, id));
 
       if (!user) {
         return c.notFound();
@@ -141,29 +133,280 @@ const api = new Hono()
       return c.json(user);
     }
   )
-  .delete(
-    '/users/:id',
+  .get(
+    '/comments',
     describeRoute({
       responses: {
-        204: {
-          description: 'User deleted by ID successfully',
+        200: {
+          description: 'Comments queried successfully',
+          content: {
+            'application/json': {
+              schema: resolver(ZCommentWithUser.array()),
+            },
+          },
         },
       },
     }),
-    zodValidator('param', ZUserByIDParams),
+    async (c) => {
+      const db = c.var.db;
+
+      const comments = await db
+        .select({
+          id: schema.comments.id,
+          content: schema.comments.content,
+          userId: schema.comments.userId,
+          createdAt: schema.comments.createdAt,
+          updatedAt: schema.comments.updatedAt,
+          user: {
+            id: schema.user.id,
+            name: schema.user.name,
+            githubUsername: schema.user.githubUsername,
+            image: schema.user.image,
+          },
+        })
+        .from(schema.comments)
+        .leftJoin(schema.user, eq(schema.comments.userId, schema.user.id))
+        .orderBy(schema.comments.createdAt);
+
+      return c.json(comments);
+    }
+  )
+  .post(
+    '/comments',
+    describeRoute({
+      responses: {
+        201: {
+          description: 'Comment created successfully',
+          content: {
+            'application/json': {
+              schema: resolver(ZCommentWithUser),
+            },
+          },
+        },
+      },
+    }),
+    zodValidator('json', ZCommentInsert),
+    async (c) => {
+      const db = c.var.db;
+      const user = c.get('user');
+      const { content } = c.req.valid('json');
+
+      const [newComment] = await db
+        .insert(schema.comments)
+        .values({
+          content,
+          userId: user.id,
+        })
+        .returning();
+
+      // Fetch the comment with user info
+      const [commentWithUser] = await db
+        .select({
+          id: schema.comments.id,
+          content: schema.comments.content,
+          userId: schema.comments.userId,
+          createdAt: schema.comments.createdAt,
+          updatedAt: schema.comments.updatedAt,
+          user: {
+            id: schema.user.id,
+            name: schema.user.name,
+            githubUsername: schema.user.githubUsername,
+            image: schema.user.image,
+          },
+        })
+        .from(schema.comments)
+        .leftJoin(schema.user, eq(schema.comments.userId, schema.user.id))
+        .where(eq(schema.comments.id, newComment.id));
+
+      return c.json(commentWithUser, 201);
+    }
+  )
+  .get(
+    '/comments/:id',
+    describeRoute({
+      responses: {
+        200: {
+          description: 'Comment queried by ID successfully',
+          content: {
+            'application/json': {
+              schema: resolver(ZCommentWithUser),
+            },
+          },
+        },
+        404: {
+          description: 'Comment with provided ID not found',
+        },
+      },
+    }),
+    zodValidator('param', ZCommentByIDParams),
     async (c) => {
       const db = c.var.db;
       const { id } = c.req.valid('param');
 
-      await db.delete(schema.users).where(eq(schema.users.id, id));
+      const [comment] = await db
+        .select({
+          id: schema.comments.id,
+          content: schema.comments.content,
+          userId: schema.comments.userId,
+          createdAt: schema.comments.createdAt,
+          updatedAt: schema.comments.updatedAt,
+          user: {
+            id: schema.user.id,
+            name: schema.user.name,
+            githubUsername: schema.user.githubUsername,
+            image: schema.user.image,
+          },
+        })
+        .from(schema.comments)
+        .leftJoin(schema.user, eq(schema.comments.userId, schema.user.id))
+        .where(eq(schema.comments.id, id));
+
+      if (!comment) {
+        return c.notFound();
+      }
+
+      return c.json(comment);
+    }
+  )
+  .put(
+    '/comments/:id',
+    describeRoute({
+      responses: {
+        200: {
+          description: 'Comment updated successfully',
+          content: {
+            'application/json': {
+              schema: resolver(ZCommentWithUser),
+            },
+          },
+        },
+        404: {
+          description: 'Comment with provided ID not found',
+        },
+        403: {
+          description: 'Forbidden - can only update your own comments',
+        },
+      },
+    }),
+    zodValidator('param', ZCommentByIDParams),
+    zodValidator('json', ZCommentUpdate),
+    async (c) => {
+      const db = c.var.db;
+      const user = c.get('user');
+      const { id } = c.req.valid('param');
+      const { content } = c.req.valid('json');
+
+      // Check if comment exists and belongs to current user
+      const [existingComment] = await db
+        .select()
+        .from(schema.comments)
+        .where(eq(schema.comments.id, id));
+
+      if (!existingComment) {
+        return c.notFound();
+      }
+
+      if (existingComment.userId !== user.id) {
+        return c.json(
+          { message: 'Forbidden - can only update your own comments' },
+          403
+        );
+      }
+
+      // Update the comment
+      await db
+        .update(schema.comments)
+        .set({
+          content,
+          updatedAt: new Date(),
+        })
+        .where(eq(schema.comments.id, id));
+
+      // Fetch updated comment with user info
+      const [updatedComment] = await db
+        .select({
+          id: schema.comments.id,
+          content: schema.comments.content,
+          userId: schema.comments.userId,
+          createdAt: schema.comments.createdAt,
+          updatedAt: schema.comments.updatedAt,
+          user: {
+            id: schema.user.id,
+            name: schema.user.name,
+            githubUsername: schema.user.githubUsername,
+            image: schema.user.image,
+          },
+        })
+        .from(schema.comments)
+        .leftJoin(schema.user, eq(schema.comments.userId, schema.user.id))
+        .where(eq(schema.comments.id, id));
+
+      return c.json(updatedComment);
+    }
+  )
+  .delete(
+    '/comments/:id',
+    describeRoute({
+      responses: {
+        204: {
+          description: 'Comment deleted successfully',
+        },
+        404: {
+          description: 'Comment with provided ID not found',
+        },
+        403: {
+          description: 'Forbidden - can only delete your own comments',
+        },
+      },
+    }),
+    zodValidator('param', ZCommentByIDParams),
+    async (c) => {
+      const db = c.var.db;
+      const user = c.get('user');
+      const { id } = c.req.valid('param');
+
+      // Check if comment exists and belongs to current user
+      const [existingComment] = await db
+        .select()
+        .from(schema.comments)
+        .where(eq(schema.comments.id, id));
+
+      if (!existingComment) {
+        return c.notFound();
+      }
+
+      if (existingComment.userId !== user.id) {
+        return c.json(
+          { message: 'Forbidden - can only delete your own comments' },
+          403
+        );
+      }
+
+      await db.delete(schema.comments).where(eq(schema.comments.id, id));
 
       return c.body(null, 204);
     }
   );
 
-const app = new Hono()
+const app = new Hono<{ Bindings: Env; Variables: Variables }>()
+  // Better Auth routes - MUST come first and bypass auth middleware
+  .on(['GET', 'POST'], '/api/auth/**', async (c) => {
+    const auth = createAuth(c.env);
+    try {
+      return await auth.handler(c.req.raw);
+    } catch (error) {
+      console.error('Better Auth error:', error);
+      return c.text('Auth error', 500);
+    }
+  })
+  // Apply auth middleware to all other routes (except auth routes)
+  .use('*', authMiddleware)
   .get('/', (c) => {
-    return c.text('Honc from above! ☁️🪿');
+    const user = c.get('user');
+    return c.json({
+      message: 'Honc from above! ☁️🪿',
+      user: user ? { name: user.name, email: user.email } : null,
+    });
   })
   .route('/api', api);
 
@@ -194,8 +437,9 @@ app.get(
   openAPISpecs(app, {
     documentation: {
       info: {
-        title: 'HONC D1 App',
+        title: 'HONC Comments API',
         version: '1.0.0',
+        description: 'A comments API built with HONC stack and Better Auth',
       },
     },
   })

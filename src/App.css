@@ -11,6 +11,13 @@
   padding-bottom: 1rem;
 }
 
+.header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 100%;
+}
+
 .app-header h1 {
   margin: 0;
   color: #f6821f;
@@ -210,15 +217,52 @@
   cursor: not-allowed;
 }
 
-/* User List */
-.user-list {
+/* Comment Form */
+.comment-form {
   background: #1a1a1a;
   border: 1px solid #333;
   border-radius: 8px;
   padding: 1.5rem;
 }
 
-.user-list h3 {
+.comment-form h3 {
+  margin-top: 0;
+  color: #f6821f;
+}
+
+.comment-form textarea {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #333;
+  border-radius: 4px;
+  background: #242424;
+  color: white;
+  box-sizing: border-box;
+  resize: vertical;
+  font-family: inherit;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.comment-form textarea:focus {
+  outline: none;
+  border-color: #646cff;
+}
+
+.comment-form textarea:disabled {
+  background: #1a1a1a;
+  color: #666;
+}
+
+/* Comment List */
+.comment-list {
+  background: #1a1a1a;
+  border: 1px solid #333;
+  border-radius: 8px;
+  padding: 1.5rem;
+}
+
+.comment-list h3 {
   margin-top: 0;
   color: #f6821f;
 }
@@ -230,75 +274,262 @@
   font-style: italic;
 }
 
-.users-grid {
+.comments-grid {
   display: flex;
   flex-direction: column;
   gap: 1rem;
 }
 
-.user-card {
+.comment-card {
   background: #242424;
   border: 1px solid #333;
   border-radius: 6px;
   padding: 1rem;
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
   transition: border-color 0.2s;
 }
 
-.user-card:hover {
+.comment-card:hover {
   border-color: #646cff;
 }
 
-.user-info {
-  flex: 1;
+.comment-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.75rem;
 }
 
-.user-info h4 {
-  margin: 0 0 0.5rem 0;
+.comment-author {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.author-avatar {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: 1px solid #646cff;
+}
+
+.author-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.author-name {
   color: white;
-  font-size: 1.1rem;
+  font-weight: 500;
+  font-size: 0.9rem;
 }
 
-.user-email {
-  margin: 0 0 0.5rem 0;
-  color: #646cff;
-  font-family: monospace;
-}
-
-.user-date {
-  margin: 0;
+.author-github {
   color: #888;
-  font-size: 0.875rem;
+  font-size: 0.8rem;
 }
 
+.comment-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.edit-button,
 .delete-button {
   background: transparent;
-  border: 1px solid #dc2626;
-  color: #dc2626;
-  padding: 0.5rem;
+  border: 1px solid #666;
+  color: #666;
+  padding: 0.25rem 0.5rem;
   border-radius: 4px;
   cursor: pointer;
-  font-size: 1rem;
+  font-size: 0.8rem;
   transition: all 0.2s;
 }
 
-.delete-button:hover:not(:disabled) {
-  background: #dc2626;
-  color: white;
+.edit-button:hover:not(:disabled) {
+  border-color: #646cff;
+  color: #646cff;
 }
 
+.delete-button:hover:not(:disabled) {
+  border-color: #dc2626;
+  color: #dc2626;
+}
+
+.edit-button:disabled,
 .delete-button:disabled {
-  border-color: #666;
-  color: #666;
+  border-color: #444;
+  color: #444;
   cursor: not-allowed;
+}
+
+.comment-content {
+  margin-bottom: 0.75rem;
+}
+
+.comment-text {
+  margin: 0;
+  color: #ccc;
+  line-height: 1.5;
+  white-space: pre-wrap;
+}
+
+.edit-form textarea {
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px solid #333;
+  border-radius: 4px;
+  background: #1a1a1a;
+  color: white;
+  box-sizing: border-box;
+  resize: vertical;
+  font-family: inherit;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.edit-form textarea:focus {
+  outline: none;
+  border-color: #646cff;
+}
+
+.edit-actions {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.save-button {
+  background: #646cff;
+  color: white;
+  border: none;
+  padding: 0.25rem 0.75rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.8rem;
+}
+
+.save-button:hover {
+  background: #535bf2;
+}
+
+.cancel-button {
+  background: transparent;
+  color: #888;
+  border: 1px solid #666;
+  padding: 0.25rem 0.75rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.8rem;
+}
+
+.cancel-button:hover {
+  border-color: #888;
+  color: #ccc;
+}
+
+.comment-meta {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.comment-date {
+  color: #888;
+  font-size: 0.8rem;
+}
+
+.comment-edited {
+  color: #666;
+  font-size: 0.8rem;
+  font-style: italic;
 }
 
 .loading {
   text-align: center;
   color: #888;
   padding: 2rem;
+}
+
+/* Authentication Styles */
+.auth-nav {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.auth-user {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.user-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 2px solid #646cff;
+}
+
+.user-name {
+  color: white;
+  font-weight: 500;
+}
+
+.user-github {
+  color: #888;
+  font-size: 0.875rem;
+  margin-left: 0.5rem;
+}
+
+.auth-button {
+  background: #646cff;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background-color 0.2s;
+}
+
+.auth-button:hover {
+  background: #535bf2;
+}
+
+.auth-button.sign-out {
+  background: transparent;
+  border: 1px solid #dc2626;
+  color: #dc2626;
+}
+
+.auth-button.sign-out:hover {
+  background: #dc2626;
+  color: white;
+}
+
+.auth-required {
+  text-align: center;
+  padding: 3rem 2rem;
+  background: #1a1a1a;
+  border: 1px solid #333;
+  border-radius: 8px;
+  margin-top: 2rem;
+}
+
+.auth-required h2 {
+  color: #f6821f;
+  margin-bottom: 1rem;
+}
+
+.auth-required p {
+  color: #888;
+  margin-bottom: 0;
 }
 
 /* Responsive */
@@ -314,5 +545,16 @@
 
   .api-links {
     flex-direction: column;
+  }
+
+  .header-content {
+    flex-direction: column;
+    gap: 1rem;
+    text-align: center;
+  }
+
+  .auth-user {
+    flex-direction: column;
+    gap: 0.5rem;
   }
 }

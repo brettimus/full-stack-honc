@@ -1,17 +1,19 @@
-# Cloudflare Worker + React SPA with HONC Stack
+# Cloudflare Worker + React SPA with HONC Stack + Better Auth
 
-This project combines a React SPA frontend with a powerful Cloudflare Worker API backend using the HONC stack (Hono + OpenAPI + NoSQL + Cloudflare).
+This project combines a React SPA frontend with a powerful Cloudflare Worker API backend using the HONC stack (Hono + OpenAPI + NoSQL + Cloudflare), enhanced with Better Auth for GitHub OAuth authentication.
 
 ## Architecture
 
 ### Frontend (React SPA)
 - **React 19** with TypeScript
 - **Vite** for development and build tooling
+- **Better Auth React Client** for authentication
 - **Biome** for code formatting and linting
 - **SWC** for fast refresh during development
 
 ### Backend (Cloudflare Worker - HONC Stack)
 - **Hono** - Ultra-fast web framework for the edge
+- **Better Auth** - Modern authentication with GitHub OAuth
 - **OpenAPI** - Auto-generated API documentation with Swagger UI
 - **D1 Database** - Serverless SQLite database 
 - **Drizzle ORM** - TypeScript ORM with schema validation
@@ -26,6 +28,46 @@ This project combines a React SPA frontend with a powerful Cloudflare Worker API
 ```bash
 pnpm install
 ```
+
+### Authentication Setup
+
+This project uses Better Auth with GitHub OAuth for authentication.
+
+#### 1. Create GitHub OAuth App
+
+1. Go to GitHub Settings > Developer settings > OAuth Apps
+2. Create a new OAuth App with:
+   - **Application name**: Your app name
+   - **Homepage URL**: `http://localhost:8787` (development) or your production URL
+   - **Authorization callback URL**: `http://localhost:8787/api/auth/callback/github`
+
+#### 2. Environment Variables
+
+Create a `.dev.vars` file in the project root:
+
+```bash
+# Better Auth Configuration
+BETTER_AUTH_SECRET=your-secret-key-here-replace-with-random-string
+BETTER_AUTH_URL="http://localhost:8787"
+
+# GitHub OAuth Configuration
+GITHUB_CLIENT_ID=your-github-oauth-app-client-id
+GITHUB_CLIENT_SECRET=your-github-oauth-app-client-secret
+```
+
+**Important**: Replace the placeholder values with:
+- A secure random string for `BETTER_AUTH_SECRET`
+- Your actual GitHub OAuth app credentials
+
+#### 3. Generate Auth Schema
+
+Generate the authentication database tables:
+
+```bash
+pnpm auth:generate
+```
+
+This creates the necessary database tables for Better Auth (user, session, account, verification).
 
 ### Development
 
@@ -50,6 +92,11 @@ pnpm db:generate   # Generate migrations from schema changes
 pnpm db:migrate    # Apply migrations to local database
 pnpm db:seed       # Seed database with sample data
 pnpm db:studio     # Open Drizzle Studio (database GUI)
+```
+
+#### Authentication Commands
+```bash
+pnpm auth:generate # Generate Better Auth database schema
 ```
 
 ### Testing
@@ -117,37 +164,116 @@ The worker provides a full-featured REST API with:
 
 ### API Endpoints
 
-- `GET /` - Health check endpoint
+#### Public Endpoints
+- `GET /` - Health check endpoint (shows user info if authenticated)
+- `GET /openapi.json` - OpenAPI specification
+- `GET /fp/*` - Fiberplane API explorer
+
+#### Authentication Endpoints
+- `GET /api/auth/sign-in/github` - Initiate GitHub OAuth sign-in
+- `GET /api/auth/callback/github` - GitHub OAuth callback
+- `POST /api/auth/sign-out` - Sign out current user
+- `GET /api/auth/session` - Get current session
+
+#### Protected Endpoints (require authentication)
 - `GET /api/users` - List all users
 - `POST /api/users` - Create new user
 - `GET /api/users/:id` - Get user by ID
 - `DELETE /api/users/:id` - Delete user by ID
-- `GET /openapi.json` - OpenAPI specification
-- `GET /fp/*` - Fiberplane API explorer
 
 ## Project Structure
 
 ```
-├── src/                    # React SPA source code
-├── worker/                 # Cloudflare Worker source code
+├── src/                       # React SPA source code
+│   ├── components/
+│   │   └── Navigation.tsx     # Authentication navigation component
+│   └── lib/
+│       └── auth.ts           # Better Auth React client
+├── worker/                    # Cloudflare Worker source code
 │   ├── src/
 │   │   ├── db/
-│   │   │   └── schema.ts   # Drizzle database schema
+│   │   │   ├── auth.ts       # Better Auth database schema (generated)
+│   │   │   └── schema.ts     # Drizzle database schema + auth tables
 │   │   ├── dtos/
-│   │   │   └── index.ts    # Zod validation schemas
+│   │   │   └── index.ts      # Zod validation schemas
+│   │   ├── lib/
+│   │   │   └── auth.ts       # Better Auth server configuration
 │   │   ├── middleware/
-│   │   │   ├── dbProvider.ts    # Database connection middleware
-│   │   │   └── validator.ts     # Request validation middleware
-│   │   └── index.ts        # Main Hono application
-│   ├── tests/              # Worker test files
-│   ├── drizzle/           # Database utilities and migrations
-│   ├── drizzle.config.ts  # Drizzle configuration
-│   ├── vitest.config.ts   # Test configuration
-│   └── seed.ts            # Database seeding script
-├── wrangler.jsonc         # Cloudflare Worker configuration
-├── biome.json             # Code formatting and linting configuration  
-└── package.json           # Project dependencies and scripts
+│   │   │   ├── auth.ts       # Authentication middleware
+│   │   │   ├── dbProvider.ts # Database connection middleware
+│   │   │   └── validator.ts  # Request validation middleware
+│   │   ├── utils/
+│   │   │   └── allow-list.ts # Optional user access control
+│   │   └── index.ts          # Main Hono application with auth routes
+│   ├── tests/                # Worker test files
+│   ├── drizzle/             # Database utilities and migrations
+│   ├── drizzle.config.ts    # Drizzle configuration
+│   ├── vitest.config.ts     # Test configuration
+│   └── seed.ts              # Database seeding script
+├── better-auth.config.ts     # Better Auth schema generation config
+├── .dev.vars                 # Development environment variables
+├── wrangler.jsonc           # Cloudflare Worker configuration
+├── biome.json               # Code formatting and linting configuration  
+└── package.json             # Project dependencies and scripts
 ```
+
+## Authentication with Better Auth
+
+This project uses [Better Auth](https://www.better-auth.com/) for modern, secure authentication.
+
+### Features
+
+- **GitHub OAuth Integration** - Sign in with GitHub accounts
+- **Session Management** - Secure session handling with cookies
+- **Type Safety** - Full TypeScript support across client and server
+- **Edge Computing** - Optimized for Cloudflare Workers
+- **Custom User Fields** - GitHub username tracking
+- **Access Control** - Optional user allowlist functionality
+
+### Key Components
+
+#### Server-Side (`worker/src/`)
+
+- **`lib/auth.ts`** - Better Auth server configuration with GitHub OAuth
+- **`middleware/auth.ts`** - Authentication middleware for protected routes
+- **`utils/allow-list.ts`** - Optional user access control (currently allows all users)
+- **Database Tables** - Automatically generated auth tables (user, session, account, verification)
+
+#### Client-Side (`src/`)
+
+- **`lib/auth.ts`** - Better Auth React client configuration
+- **`components/Navigation.tsx`** - Authentication UI component with sign-in/out
+- **App.tsx** - Auth state management and conditional rendering
+
+### Configuration
+
+#### Environment Variables
+
+- **`BETTER_AUTH_SECRET`** - Secret key for session encryption
+- **`BETTER_AUTH_URL`** - Base URL for auth callbacks
+- **`GITHUB_CLIENT_ID`** - GitHub OAuth app client ID
+- **`GITHUB_CLIENT_SECRET`** - GitHub OAuth app client secret
+
+#### User Access Control
+
+To restrict access to specific GitHub users, edit `worker/src/utils/allow-list.ts`:
+
+```typescript
+const allowedGitHubUsernames = new Set<string>([
+  "your-username",
+  "teammate-username",
+]);
+```
+
+By default, all authenticated GitHub users are allowed access.
+
+### Production Setup
+
+For production deployment, update your environment variables:
+
+1. **Create production GitHub OAuth app** with your production URL
+2. **Set production environment variables** in Cloudflare dashboard or `.prod.vars`
+3. **Update `wrangler.jsonc`** with production `BETTER_AUTH_URL`
 
 ## Code Quality with Biome
 

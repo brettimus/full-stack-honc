@@ -5,8 +5,15 @@
     {
       "idx": 0,
       "version": "6",
-      "when": 1756466598518,
-      "tag": "0000_elite_william_stryker",
+      "when": 1756485037456,
+      "tag": "0000_parallel_nico_minoru",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "6",
+      "when": 1756485553745,
+      "tag": "0001_quiet_echo",
       "breakpoints": true
     }
   ]
