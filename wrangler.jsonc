@@ -5,14 +5,23 @@
 {
 	"$schema": "node_modules/wrangler/config-schema.json",
 	"name": "hackday-cf-vite-setup",
-	"main": "worker/index.ts",
+	"main": "worker/src/index.ts",
 	"compatibility_date": "2025-08-29",
+	"compatibility_flags": ["nodejs_compat"],
 	"assets": {
 		"not_found_handling": "single-page-application"
 	},
 	"observability": {
 		"enabled": true
-	}
+	},
+	"d1_databases": [
+		{
+			"binding": "DB",
+			"database_name": "honc-d1-database",
+			"database_id": "local-honc-d1-database",
+			"migrations_dir": "worker/drizzle/migrations"
+		}
+	]
 	/**
 	 * Smart Placement
 	 * Docs: https://developers.cloudflare.com/workers/configuration/smart-placement/#smart-placement
