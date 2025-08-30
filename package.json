@@ -5,7 +5,11 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b && vite build",
+    "build": "vite build",
+    "typecheck": "pnpm run typecheck:src && pnpm run typecheck:worker && pnpm run typecheck:worker-tests",
+    "typecheck:src": "tsc --project tsconfig.app.json --noEmit",
+    "typecheck:worker": "tsc --project tsconfig.worker.json --noEmit",
+    "typecheck:worker-tests": "tsc --project tsconfig.worker-tests.json --noEmit",
     "lint": "biome check --write .",
     "format": "biome format --write .",
     "preview": "pnpm run build && vite preview",

@@ -1,19 +1,7 @@
 import { Button } from '@/components/ui/button';
-import { authClient } from '@/lib/auth';
+import { authClient, type AuthUser } from '@/lib/auth';
 
-interface User {
-  id: string;
-  name: string;
-  email?: string;
-  image?: string | null;
-  githubUsername?: string;
-}
-
-interface UserProfileProps {
-  user: User;
-}
-
-export function UserProfile({ user }: UserProfileProps) {
+export function UserProfile({ user }: { user: AuthUser }) {
   const handleSignOut = async () => {
     await authClient.signOut({
       fetchOptions: {

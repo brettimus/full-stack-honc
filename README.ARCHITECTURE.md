@@ -15,8 +15,6 @@ Comprehensive guide to the project structure, authentication system, and API des
 │   │   ├── CommentForm.tsx    # Comment creation form
 │   │   ├── CommentList.tsx    # Comments display
 │   │   ├── Navigation.tsx     # Auth navigation component
-│   │   ├── UserForm.tsx       # User creation form
-│   │   └── UserList.tsx       # Users display
 │   ├── lib/
 │   │   └── auth.ts           # Better Auth React client
 │   ├── api.ts                # Frontend API client
