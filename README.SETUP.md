@@ -113,11 +113,9 @@ pnpm worker:dev
 
 ### 2. Test the Setup
 
-1. **Frontend**: Visit `http://localhost:5173` - Should show the React app
-2. **Backend**: Visit `http://localhost:8787` - Should show API health check
-3. **Authentication**: Click "Sign in with GitHub" - Should redirect to GitHub OAuth
-4. **API Explorer**: Visit `http://localhost:8787/fp` - Fiberplane API explorer
-5. **OpenAPI Docs**: Visit `http://localhost:8787/openapi.json` - API specification
+1. **Frontend and API**: Visit `http://localhost:4284` - Should show the React app
+2. **Authentication**: Click "Sign in with GitHub" - Should redirect to GitHub OAuth
+3. **OpenAPI Docs**: Visit `http://localhost:4284/openapi.json` - API specification
 
 ### 3. Database Verification
 
@@ -127,18 +125,13 @@ pnpm db:studio
 ```
 
 You should see:
-- **Application tables** (e.g., `users`) 
+- **Application tables**
 - **Auth tables** (user, session, account, verification)
 - **Sample data** (if you ran the seed command)
 
 ## Troubleshooting
 
 ### Common Issues
-
-**❌ GitHub OAuth not working**
-- Verify your `.dev.vars` has correct `GITHUB_CLIENT_ID` and `GITHUB_CLIENT_SECRET`
-- Check that your GitHub OAuth app callback URL matches `http://localhost:8787/api/auth/callback/github`
-- Ensure `BETTER_AUTH_URL` matches your worker dev server URL
 
 **❌ Database connection errors**
 - Run `pnpm db:touch` to verify database connection
@@ -147,20 +140,19 @@ You should see:
 
 **❌ Auth tables missing**
 - Run `pnpm auth:generate` to regenerate auth schema
-- Run `pnpm db:migrate` to apply auth table migrations
+- Run `pnpm db:generate && pnpm db:migrate` to apply auth table migrations
 - Verify `better-auth.config.ts` configuration is correct
 
 **❌ TypeScript errors**
 - Run `pnpm install` to ensure all dependencies are installed
-- Check that you're using Node.js 18+ and latest pnpm version
+- Check that you're using Node.js 22+ and latest pnpm version
 - Try restarting your TypeScript language server
 
 ### Getting Help
 
 1. **Check logs**: Look at terminal output for specific error messages
 2. **Database inspection**: Use `pnpm db:studio` to inspect database state
-3. **API testing**: Use `http://localhost:8787/fp` to test API endpoints
-4. **Configuration**: Verify all files in the checklist below
+3. **Configuration**: Verify all files in the checklist below
 
 ## Configuration Checklist
 
@@ -168,9 +160,9 @@ Before proceeding to development, ensure you have:
 
 - [ ] `.dev.vars` file with all required environment variables
 - [ ] GitHub OAuth app created with correct callback URL
-- [ ] Auth schema generated (`pnpm auth:generate`)
+- [x] Auth schema generated (`pnpm auth:generate`)
 - [ ] Database set up and migrated (`pnpm db:setup`)
-- [ ] Both dev servers running without errors
+- [ ] Dev server running without errors
 - [ ] GitHub OAuth sign-in working
 - [ ] Database accessible via Drizzle Studio
 

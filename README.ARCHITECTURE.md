@@ -59,7 +59,6 @@ Comprehensive guide to the project structure, authentication system, and API des
 ## Architecture Patterns
 
 ### 1. Full-Stack TypeScript
-- **Shared Types**: Common types in `src/types.ts` used by both frontend and backend
 - **Type-Safe APIs**: Zod schemas generate both runtime validation and TypeScript types
 - **End-to-End Safety**: From database schema to frontend components
 
@@ -116,16 +115,15 @@ sequenceDiagram
 
 #### Application Tables
 
-**Users Table** (`worker/src/db/schema.ts`):
+**Example "Things" Table** (`worker/src/db/schema.ts`):
 ```typescript
-export const users = sqliteTable('users', {
+export const things = sqliteTable('things', {
   id: text('id').primaryKey().$defaultFn(() => crypto.randomUUID()),
-  name: text('name').notNull(),
-  email: text('email').notNull(),
+  uniqueLabel: text('unique_label').notNull(),
   createdAt: text('created_at').notNull().$defaultFn(() => new Date().toISOString()),
   updatedAt: text('updated_at').notNull().$defaultFn(() => new Date().toISOString()),
 }, (table) => ({
-  emailUniqueIndex: uniqueIndex('emailUniqueIndex').on(sql`lower(${table.email})`),
+  uniqueLabelUniqueIndex: uniqueIndex('unique_label_unique_index').on(sql`lower(${table.uniqueLabel})`),
 }))
 ```
 
@@ -369,11 +367,10 @@ describe('User API', () => {
 
 ### Build Process
 
-1. **Frontend Build**: Vite builds React app to `dist/`
+1. **Build**: Vite builds the React app and the Cloudflare Worker to `dist/`
 2. **Asset Integration**: Worker serves frontend assets
-3. **Worker Bundle**: Cloudflare Workers build process
-4. **Environment Variables**: Injected during deployment
-5. **Database Migrations**: Applied automatically
+3. **Environment Variables**: Injected during deployment
+4. **Database Migrations**: Need to be applied unless you do it in CI
 
 ### Environment Management
 

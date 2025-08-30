@@ -7,16 +7,9 @@ Development workflow, commands, testing, and deployment for the HONC Stack templ
 ### Daily Development
 
 ```bash
-# Start both servers (run in separate terminals)
-pnpm dev          # Frontend React dev server (http://localhost:5173)
-pnpm worker:dev   # Backend Worker dev server (http://localhost:8787)
+# Start the entire app
+pnpm dev # Vite dev server that reloads frontend + api (http://localhost:4284)
 ```
-
-### Hot Reload & Live Updates
-
-- **Frontend**: Vite provides instant hot module replacement
-- **Backend**: Wrangler automatically reloads on file changes
-- **Database**: Changes to schema require migration generation
 
 ## Development Commands
 
@@ -24,8 +17,7 @@ pnpm worker:dev   # Backend Worker dev server (http://localhost:8787)
 
 ```bash
 # Development servers
-pnpm dev                    # Start React frontend dev server
-pnpm worker:dev             # Start Cloudflare Worker dev server
+pnpm dev                    # Start Vite dev server that reloads frontend + api (http://localhost:4284)
 
 # Database operations  
 pnpm db:setup               # Complete database setup (touch + migrate + seed)
@@ -39,8 +31,8 @@ pnpm db:studio              # Open Drizzle Studio (database GUI)
 pnpm auth:generate          # Generate Better Auth database schema
 
 # Testing
-pnpm worker:test            # Run API tests once
-pnpm worker:test:watch      # Run API tests in watch mode
+pnpm worker:test            # Run API tests once in miniflare
+pnpm worker:test:watch      # Run API tests in watch mode in miniflare
 
 # Code quality
 pnpm format                 # Format all code with Biome
@@ -56,12 +48,9 @@ pnpm deploy                 # Deploy to Cloudflare (frontend + worker)
 ```bash
 # Install new dependencies
 pnpm add <package>              # Add to frontend dependencies
-pnpm add -w <package>           # Add to workspace root
-pnpm add --filter worker <pkg>  # Add to worker dependencies
 
 # Remove dependencies
 pnpm remove <package>           # Remove from frontend
-pnpm remove -w <package>        # Remove from workspace root
 ```
 
 ## Testing

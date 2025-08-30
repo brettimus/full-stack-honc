@@ -1,0 +1,12 @@
+# AI Configuration
+OPENAI_API_KEY=...
+
+# Better Auth Configuration
+BETTER_AUTH_SECRET=a-very-long-random-string
+BETTER_AUTH_URL="http://localhost:4284"
+
+# GitHub OAuth Configuration
+# Create a GitHub OAuth App at: https://github.com/settings/developers
+# Set Authorization callback URL to: http://localhost:4284/api/auth/callback/github
+GITHUB_CLIENT_ID=...
+GITHUB_CLIENT_SECRET=...

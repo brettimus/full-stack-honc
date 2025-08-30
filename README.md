@@ -1,6 +1,17 @@
 # HONC Stack Template with Better Auth
 
-A full-stack TypeScript template combining React 19 SPA with Cloudflare Workers backend, featuring the HONC stack (Hono + OpenAPI + D1 + Cloudflare) and GitHub OAuth authentication via Better Auth.
+A full-stack TypeScript template combining React 19 SPA with Cloudflare Workers backend.
+
+The backend features the HONC stack: 
+- Hono OpenAPI
+- Drizzle ORM on D1 (sqlite)
+- Cloudflare. 
+
+The `@cloudflare/vite-plugin` package makes everything deployable to Cloudflare.
+
+Docs on the HONC stack are here: https://docs.honc.dev
+
+This template also uses GitHub OAuth authentication, implemented with Better Auth, since Better Auth has sensible adapters for both Hono and Drizzle.
 
 ## Tech Stack
 
@@ -35,12 +46,11 @@ pnpm install
 cp .dev.vars.example .dev.vars  # Add your GitHub OAuth credentials
 
 # Generate auth schema and set up database
-pnpm auth:generate
+pnpm auth:generate # you probably do not need to do this as the template has the schema already
 pnpm db:setup
 
-# Start development servers
-pnpm dev          # Frontend (React)
-pnpm worker:dev   # Backend (Worker)
+# Start development server
+pnpm dev
 ```
 
 ## Documentation

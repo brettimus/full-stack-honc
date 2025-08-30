@@ -25,7 +25,7 @@ If any check fails, fix the issues and run checks again.
 
 - Do not read the entirety of worker-configuration.d.ts. These files are large and blow up your context window. Instead grep them or read them piece by piece
 
-- To run tests use "pnpm worker:test run" (not just "pnpm test") - this runs vitest once and exits
+- To run api tests in an environment similar to Cloudflare Workers, use "pnpm worker:test run"
 
 - In vitest if you need to check if something is defined and you're then planning to check any further things there - use assert() call from vitest as opposed to expect(<thing>).toBeDefined(). This will prevent any type errors
 
