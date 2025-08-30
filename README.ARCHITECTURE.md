@@ -85,10 +85,10 @@ Comprehensive guide to the project structure, authentication system, and API des
 
 Better Auth provides a complete authentication solution with:
 
-- **Server-Side Configuration** (`worker/src/lib/auth.ts`)
+- **Server-Side Configuration** (`worker/api/lib/auth.ts`)
 - **Client-Side Integration** (`src/lib/auth.ts`) 
 - **Automatic Database Management** (auth tables generated automatically)
-- **Middleware Integration** (`worker/src/middleware/auth.ts`)
+- **Middleware Integration** (`worker/api/middleware/auth.ts`)
 
 ### Authentication Flow
 
@@ -117,7 +117,7 @@ sequenceDiagram
 
 #### Application Tables
 
-**Example "Things" Table** (`worker/src/db/schema.ts`):
+**Example "Things" Table** (`worker/api/db/schema.ts`):
 ```typescript
 export const things = sqliteTable('things', {
   id: text('id').primaryKey().$defaultFn(() => crypto.randomUUID()),

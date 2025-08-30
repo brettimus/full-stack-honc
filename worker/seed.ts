@@ -1,7 +1,7 @@
 import { config } from 'dotenv';
 import { drizzle } from 'drizzle-orm/d1';
 import { seed } from 'drizzle-seed';
-import * as schema from './src/db/schema';
+import * as schema from './api/db/schema';
 
 // Load environment variables
 config({

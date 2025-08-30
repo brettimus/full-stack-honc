@@ -2,7 +2,7 @@ import { env } from 'cloudflare:test';
 import { testClient } from 'hono/testing';
 import { beforeAll, describe, expect, it } from 'vitest';
 
-import app from '../src';
+import app from '../api';
 
 const client = testClient(app, env);
 

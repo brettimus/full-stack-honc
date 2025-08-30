@@ -18,7 +18,7 @@ if (process.env.ENVIRONMENT === 'production') {
   }
 
   dbConfig = defineConfig({
-    schema: './worker/src/db/schema.ts',
+    schema: './worker/api/db/schema.ts',
     out: './worker/drizzle/migrations',
     dialect: 'sqlite',
     driver: 'd1-http',
@@ -35,7 +35,7 @@ if (process.env.ENVIRONMENT === 'production') {
   const localDbPath = getLocalD1DbPath();
 
   dbConfig = defineConfig({
-    schema: './worker/src/db/schema.ts',
+    schema: './worker/api/db/schema.ts',
     out: './worker/drizzle/migrations',
     dialect: 'sqlite',
     casing: 'snake_case',

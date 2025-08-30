@@ -11,6 +11,6 @@
   },
   "include": [
     "./worker/tests/**/*",
-    "./worker/src/**/*"
+    "./worker/api/**/*"
   ]
 }

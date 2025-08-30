@@ -23,9 +23,7 @@
     "db:seed:prod": "ENVIRONMENT=production tsx worker/seed.ts",
     "db:setup": "pnpm run db:touch && pnpm run db:generate && pnpm run db:migrate && pnpm run db:seed",
     "db:studio": "drizzle-kit studio",
-    "auth:generate": "pnpx @better-auth/cli generate --config ./better-auth.config.ts --output ./worker/src/db/auth.ts",
-    "worker:dev": "wrangler dev worker/src/index.ts",
-    "worker:deploy": "wrangler deploy --minify worker/src/index.ts",
+    "auth:generate": "pnpx @better-auth/cli generate --config ./better-auth.config.ts --output ./worker/api/db/auth.ts",
     "worker:test": "vitest run --config worker/vitest.config.ts",
     "worker:test:watch": "vitest --config worker/vitest.config.ts"
   },

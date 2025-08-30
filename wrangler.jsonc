@@ -5,7 +5,7 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "hackday-cf-vite-setup",
-  "main": "worker/src/index.ts",
+  "main": "worker/api/index.ts",
   "compatibility_date": "2025-08-29",
   "compatibility_flags": ["nodejs_compat"],
   "assets": {

@@ -5,15 +5,8 @@
     {
       "idx": 0,
       "version": "6",
-      "when": 1756485037456,
-      "tag": "0000_parallel_nico_minoru",
-      "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "6",
-      "when": 1756485553745,
-      "tag": "0001_quiet_echo",
+      "when": 1756540601708,
+      "tag": "0000_premium_shotgun",
       "breakpoints": true
     }
   ]
