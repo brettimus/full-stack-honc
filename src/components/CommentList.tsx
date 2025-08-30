@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Button } from '@/components/ui/button';
 import type { CommentWithUser } from '../types';
 
 interface CommentListProps {
@@ -43,100 +44,100 @@ export function CommentList({
 
   if (comments.length === 0) {
     return (
-      <div className="comment-list">
-        <h3>💬 Comments</h3>
-        <div className="empty-state">
-          No comments yet. Be the first to share your thoughts!
+      <div className="rounded-lg border bg-card p-6 text-card-foreground shadow-sm">
+        <h3 className="mb-4 text-lg font-semibold">💬 Comments</h3>
+        <div className="flex flex-col items-center justify-center py-8 text-center text-muted-foreground">
+          <div className="mb-2 text-4xl">💭</div>
+          <p>No comments yet. Be the first to share your thoughts!</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="comment-list">
-      <h3>💬 Comments ({comments.length})</h3>
-      <div className="comments-grid">
+    <div className="space-y-4">
+      <h3 className="text-lg font-semibold">💬 Comments ({comments.length})</h3>
+      <div className="space-y-4">
         {comments.map((comment) => (
-          <div key={comment.id} className="comment-card">
-            <div className="comment-header">
-              <div className="comment-author">
+          <div
+            key={comment.id}
+            className="rounded-lg border bg-card p-4 text-card-foreground shadow-sm"
+          >
+            <div className="mb-3 flex items-start justify-between">
+              <div className="flex items-center space-x-3">
                 {comment.user.image && (
                   <img
                     src={comment.user.image}
                     alt={comment.user.name}
-                    className="author-avatar"
+                    className="h-8 w-8 rounded-full"
                   />
                 )}
-                <div className="author-info">
-                  <span className="author-name">{comment.user.name}</span>
+                <div>
+                  <div className="font-medium">{comment.user.name}</div>
                   {comment.user.githubUsername && (
-                    <span className="author-github">
+                    <div className="text-xs text-muted-foreground">
                       @{comment.user.githubUsername}
-                    </span>
+                    </div>
                   )}
                 </div>
               </div>
-              <div className="comment-actions">
-                {currentUserId === comment.userId && (
-                  <>
-                    <button
-                      type="button"
-                      onClick={() => handleEdit(comment)}
-                      className="edit-button"
-                      disabled={editingId === comment.id}
-                    >
-                      ✏️
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => onDeleteComment(comment.id)}
-                      className="delete-button"
-                      disabled={isDeleting === comment.id}
-                    >
-                      {isDeleting === comment.id ? '⏳' : '🗑️'}
-                    </button>
-                  </>
-                )}
-              </div>
+              {currentUserId === comment.userId && (
+                <div className="flex space-x-1">
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => handleEdit(comment)}
+                    disabled={editingId === comment.id}
+                    className="h-8 w-8 p-0"
+                  >
+                    ✏️
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => onDeleteComment(comment.id)}
+                    disabled={isDeleting === comment.id}
+                    className="h-8 w-8 p-0 text-destructive hover:text-destructive"
+                  >
+                    {isDeleting === comment.id ? '⏳' : '🗑️'}
+                  </Button>
+                </div>
+              )}
             </div>
 
-            <div className="comment-content">
+            <div className="mb-3">
               {editingId === comment.id ? (
-                <div className="edit-form">
+                <div className="space-y-3">
                   <textarea
                     value={editContent}
                     onChange={(e) => setEditContent(e.target.value)}
                     rows={3}
+                    className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 resize-none"
                   />
-                  <div className="edit-actions">
-                    <button
-                      type="button"
+                  <div className="flex space-x-2">
+                    <Button
+                      size="sm"
                       onClick={() => handleSaveEdit(comment.id)}
-                      className="save-button"
                     >
                       Save
-                    </button>
-                    <button
-                      type="button"
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="sm"
                       onClick={handleCancelEdit}
-                      className="cancel-button"
                     >
                       Cancel
-                    </button>
+                    </Button>
                   </div>
                 </div>
               ) : (
-                <p className="comment-text">{comment.content}</p>
+                <p className="text-sm leading-relaxed">{comment.content}</p>
               )}
             </div>
 
-            <div className="comment-meta">
-              <span className="comment-date">
-                {formatDate(comment.createdAt)}
-              </span>
-              {comment.updatedAt > comment.createdAt && (
-                <span className="comment-edited">(edited)</span>
-              )}
+            <div className="flex items-center space-x-2 text-xs text-muted-foreground">
+              <span>{formatDate(comment.createdAt)}</span>
+              {comment.updatedAt > comment.createdAt && <span>• (edited)</span>}
             </div>
           </div>
         ))}

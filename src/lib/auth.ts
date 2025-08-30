@@ -4,5 +4,8 @@ export const authClient = createAuthClient({
   baseURL:
     typeof window !== 'undefined'
       ? window.location.origin
-      : 'http://localhost:8787',
+      : 'http://localhost:4284',
 });
+
+// Export the useSession hook for convenience
+export const { useSession } = authClient;

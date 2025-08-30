@@ -52,12 +52,20 @@ export function Navigation({ user, isAuthenticated }: NavigationProps) {
               )}
             </div>
           </div>
-          <button onClick={handleSignOut} className="auth-button sign-out">
+          <button
+            type="button"
+            onClick={handleSignOut}
+            className="auth-button sign-out"
+          >
             Sign out
           </button>
         </div>
       ) : (
-        <button onClick={handleSignIn} className="auth-button sign-in">
+        <button
+          type="button"
+          onClick={handleSignIn}
+          className="auth-button sign-in"
+        >
           Sign in with GitHub
         </button>
       )}
