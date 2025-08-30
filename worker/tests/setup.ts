@@ -5,6 +5,8 @@ import { env } from 'cloudflare:test';
  */
 export default async function () {
   await Promise.all(
-    env.TEST_MIGRATIONS.map((migration) => env.DB.exec(migration.sql))
+    env.TEST_MIGRATIONS.flatMap((migration) =>
+      migration.queries.map((query) => env.DB.exec(query))
+    )
   );
 }

@@ -4,40 +4,35 @@ import 'zod-openapi/extend';
 import * as schema from '../db/schema';
 
 // User DTOs (Better Auth - read-only, creation handled by OAuth)
-export const ZUserSelect = createSelectSchema(schema.user, {
-  id: (schema) =>
-    schema.openapi({
+export const ZUserSelect = createSelectSchema(schema.user)
+  .extend({
+    id: z.string().openapi({
       example: '3e0bb3d0-2074-4a1e-6263-d13dd10cb0cf',
     }),
-  name: (schema) =>
-    schema.openapi({
+    name: z.string().openapi({
       example: 'Goose McCloud',
     }),
-  email: (schema) =>
-    schema.email().openapi({
+    email: z.string().email().openapi({
       example: 'goose@honc.dev',
     }),
-  githubUsername: (schema) =>
-    schema.openapi({
+    githubUsername: z.string().nullable().openapi({
       example: 'goose-mccloud',
     }),
-  image: (schema) =>
-    schema.openapi({
+    image: z.string().nullable().openapi({
       example: 'https://avatars.githubusercontent.com/u/12345?v=4',
     }),
-  createdAt: (schema) =>
-    schema.openapi({
-      example: 1672531200,
-      description: 'Unix timestamp',
+    createdAt: z.date().openapi({
+      example: new Date('2023-01-01T00:00:00Z'),
+      description: 'Creation timestamp',
     }),
-  updatedAt: (schema) =>
-    schema.openapi({
-      example: 1672531200,
-      description: 'Unix timestamp',
+    updatedAt: z.date().openapi({
+      example: new Date('2023-01-01T00:00:00Z'),
+      description: 'Last update timestamp',
     }),
-}).openapi({
-  ref: 'UserSelect',
-});
+  })
+  .openapi({
+    ref: 'UserSelect',
+  });
 
 export const ZUserByIDParams = z
   .object({
@@ -50,54 +45,51 @@ export const ZUserByIDParams = z
   });
 
 // Comment DTOs
-export const ZCommentInsert = createInsertSchema(schema.comments, {
-  content: (schema) =>
-    schema.openapi({
-      example: 'This is a great post! Thanks for sharing.',
-    }),
-})
+export const ZCommentInsert = createInsertSchema(schema.comments)
   .pick({
     content: true,
+  })
+  .extend({
+    content: z.string().openapi({
+      example: 'This is a great post! Thanks for sharing.',
+    }),
   })
   .openapi({
     ref: 'CommentInsert',
   });
 
-export const ZCommentSelect = createSelectSchema(schema.comments, {
-  id: (schema) =>
-    schema.openapi({
+export const ZCommentSelect = createSelectSchema(schema.comments)
+  .extend({
+    id: z.string().openapi({
       example: '3e0bb3d0-2074-4a1e-6263-d13dd10cb0cf',
     }),
-  content: (schema) =>
-    schema.openapi({
+    content: z.string().openapi({
       example: 'This is a great post! Thanks for sharing.',
     }),
-  userId: (schema) =>
-    schema.openapi({
+    userId: z.string().openapi({
       example: '3e0bb3d0-2074-4a1e-6263-d13dd10cb0cf',
     }),
-  createdAt: (schema) =>
-    schema.openapi({
-      example: 1672531200,
-      description: 'Unix timestamp',
+    createdAt: z.date().openapi({
+      example: new Date('2023-01-01T00:00:00Z'),
+      description: 'Creation timestamp',
     }),
-  updatedAt: (schema) =>
-    schema.openapi({
-      example: 1672531200,
-      description: 'Unix timestamp',
+    updatedAt: z.date().openapi({
+      example: new Date('2023-01-01T00:00:00Z'),
+      description: 'Last update timestamp',
     }),
-}).openapi({
-  ref: 'CommentSelect',
-});
+  })
+  .openapi({
+    ref: 'CommentSelect',
+  });
 
-export const ZCommentUpdate = createInsertSchema(schema.comments, {
-  content: (schema) =>
-    schema.openapi({
-      example: 'Updated comment content.',
-    }),
-})
+export const ZCommentUpdate = createInsertSchema(schema.comments)
   .pick({
     content: true,
+  })
+  .extend({
+    content: z.string().openapi({
+      example: 'Updated comment content.',
+    }),
   })
   .partial()
   .openapi({
