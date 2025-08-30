@@ -1,23 +1,6 @@
 {
   "permissions": {
-    "allow": [
-      "Read(/private/tmp/**)",
-      "Read(/tmp/create-honc-app/**)",
-      "Read(/tmp/create-honc-app/templates/d1-openapi/**)",
-      "Read(/tmp/create-honc-app/templates/d1-openapi/**)",
-      "Read(/tmp/create-honc-app/templates/d1-openapi/**)",
-      "Read(/tmp/create-honc-app/templates/d1-openapi/src/**)",
-      "Read(/tmp/create-honc-app/templates/d1-openapi/src/**)",
-      "Read(/tmp/create-honc-app/templates/d1-openapi/src/db/**)",
-      "Read(/tmp/create-honc-app/templates/d1-openapi/src/dtos/**)",
-      "Read(/tmp/create-honc-app/templates/d1-openapi/src/middleware/**)",
-      "Read(/tmp/create-honc-app/templates/d1-openapi/src/middleware/**)",
-      "Read(/tmp/create-honc-app/templates/d1-openapi/**)",
-      "Read(/tmp/create-honc-app/templates/d1-openapi/tests/**)",
-      "Read(/tmp/create-honc-app/templates/d1-openapi/**)",
-      "Read(/tmp/create-honc-app/templates/d1-openapi/**)",
-      "Read(/tmp/create-honc-app/templates/d1-openapi/**)"
-    ],
+    "allow": [],
     "deny": [],
     "ask": []
   }
