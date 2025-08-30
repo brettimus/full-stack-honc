@@ -281,6 +281,7 @@ wrangler tail --name your-worker-name
 
 **Frontend:**
 - Vite provides fast HMR and optimized builds
+- TanStack Router provides automatic code splitting and type-safe routing
 - React 19 includes automatic optimizations
 - TypeScript compilation is fast with SWC
 
@@ -290,6 +291,12 @@ wrangler tail --name your-worker-name
 - Better Auth is designed for serverless environments
 
 ### Common Workflows
+
+**Adding a new route:**
+1. Create a new `.tsx` file in `src/routes/` (e.g., `src/routes/dashboard.tsx`)
+2. Use `createFileRoute` to define the route with path and component
+3. The route tree is automatically updated by TanStack Router plugin
+4. Add navigation links using the type-safe `Link` component
 
 **Adding a new API endpoint:**
 1. Define Zod schema in `worker/src/dtos/index.ts`

@@ -61,8 +61,7 @@ function getLocalD1DB() {
     }
 
     return path.resolve(basePath, dbFile);
-  } catch (err) {
-    console.log(`Error resolving local D1 DB: ${err}`);
+  } catch (_err) {
     return null;
   }
 }

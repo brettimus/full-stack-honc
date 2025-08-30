@@ -17,6 +17,7 @@ This template also uses GitHub OAuth authentication, implemented with Better Aut
 
 ### Frontend
 - **React 19** - Latest React with concurrent features
+- **TanStack Router** - Type-safe file-based routing with automatic code splitting
 - **TypeScript** - Full type safety
 - **Vite** - Fast build tool with HMR
 - **Better Auth Client** - Type-safe authentication
@@ -63,7 +64,8 @@ pnpm dev
 
 - ✅ **GitHub OAuth** - Secure authentication with Better Auth
 - ✅ **Type-Safe APIs** - Full TypeScript coverage with Zod validation
+- ✅ **Type-Safe Routing** - File-based routing with TanStack Router
 - ✅ **Edge Computing** - Global performance with Cloudflare Workers
-- ✅ **Modern Stack** - React 19, Hono, D1, and latest tooling
+- ✅ **Modern Stack** - React 19, TanStack Router, Hono, D1, and latest tooling
 - ✅ **Developer Experience** - Fast builds, hot reload, and comprehensive testing
 - ✅ **Production Ready** - Deployment automation and environment management

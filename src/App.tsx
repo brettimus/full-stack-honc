@@ -5,7 +5,7 @@ import { CommentForm } from './components/CommentForm';
 import { CommentList } from './components/CommentList';
 import { Navigation } from './components/Navigation';
 import { authClient } from './lib/auth';
-import type { CreateCommentRequest, CommentWithUser } from './types';
+import type { CommentWithUser, CreateCommentRequest } from './types';
 import './App.css';
 
 function App() {

@@ -1,7 +1,8 @@
-import { sqliteTable, text, integer } from 'drizzle-orm/sqlite-core';
+import { integer, sqliteTable, text } from 'drizzle-orm/sqlite-core';
 
 // Re-export Better Auth tables
 export * from './auth';
+
 import { user } from './auth';
 
 // Comments table - associated with authenticated users

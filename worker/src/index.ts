@@ -6,12 +6,12 @@ import { describeRoute, openAPISpecs } from 'hono-openapi';
 import { resolver } from 'hono-openapi/zod';
 import * as schema from './db/schema';
 import {
-  ZUserByIDParams,
-  ZUserSelect,
+  ZCommentByIDParams,
   ZCommentInsert,
   ZCommentUpdate,
-  ZCommentByIDParams,
   ZCommentWithUser,
+  ZUserByIDParams,
+  ZUserSelect,
 } from './dtos';
 import { createAuth } from './lib/auth';
 import { authMiddleware } from './middleware/auth';

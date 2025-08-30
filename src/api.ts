@@ -1,7 +1,7 @@
 import type {
   ApiError,
-  CreateCommentRequest,
   CommentWithUser,
+  CreateCommentRequest,
   User,
 } from './types';
 

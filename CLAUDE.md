@@ -33,6 +33,16 @@ If any check fails, fix the issues and run checks again.
 
 - You should almost never add Cloudflare Bindings directly as a type. First see if they can be generated from the .dev.vars or the wrangler configuration file (using `pnpm cf-typegen`)
 
+### TanStack Router Guidelines
+
+- Use file-based routing: create new routes by adding `.tsx` files to `src/routes/`
+- Follow TanStack Router file naming conventions for dynamic routes (`$param`), index routes, and layout routes
+- The `routeTree.gen.ts` file is auto-generated - never edit it manually
+- Use `createFileRoute()` for all route definitions
+- Use the `Link` component for type-safe navigation
+- Use route-specific hooks like `Route.useParams()` and `Route.useSearch()` for type safety
+- For shared components, use `getRouteApi()` to access route-specific hooks without importing the route
+
 <@tanstack/react-router_api>
 Always Apply: false - This rule should only be applied when relevant files are open
 Always apply this rule in these files: src/**/*.ts, src/**/*.tsx

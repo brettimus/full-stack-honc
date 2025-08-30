@@ -6,6 +6,10 @@ Comprehensive guide to the project structure, authentication system, and API des
 
 ```
 ├── src/                       # React SPA Frontend
+│   ├── routes/               # TanStack Router file-based routes
+│   │   ├── __root.tsx        # Root route with navigation and layout
+│   │   ├── index.tsx         # Home page route (/)
+│   │   └── about.tsx         # About page route (/about)
 │   ├── components/            # React components
 │   │   ├── ApiStatus.tsx      # API connection status
 │   │   ├── CommentForm.tsx    # Comment creation form
@@ -17,8 +21,8 @@ Comprehensive guide to the project structure, authentication system, and API des
 │   │   └── auth.ts           # Better Auth React client
 │   ├── api.ts                # Frontend API client
 │   ├── types.ts              # Shared TypeScript types
-│   ├── App.tsx               # Main React component
-│   └── main.tsx              # React entry point
+│   ├── routeTree.gen.ts      # Auto-generated route tree (do not edit)
+│   └── main.tsx              # React entry point with TanStack Router
 │
 ├── worker/                    # Cloudflare Worker Backend
 │   ├── src/
@@ -253,6 +257,23 @@ Consistent error responses across all endpoints:
 
 ## Frontend Architecture
 
+### TanStack Router
+
+The frontend uses TanStack Router for type-safe, file-based routing:
+
+- **File-Based Routing**: Routes are defined by the file structure in `src/routes/`
+- **Type Safety**: 100% inferred TypeScript support for navigation and params
+- **Automatic Code Splitting**: Routes are automatically split into separate chunks
+- **Route Tree Generation**: `routeTree.gen.ts` is auto-generated from route files
+- **Developer Experience**: Built-in devtools for debugging routing state
+
+**Route Structure**:
+- `src/routes/__root.tsx` - Root layout with navigation and devtools
+- `src/routes/index.tsx` - Home page (`/`)
+- `src/routes/about.tsx` - About page (`/about`)
+
+**Adding New Routes**: Simply create new `.tsx` files in `src/routes/` following TanStack Router's file naming conventions.
+
 ### React 19 Features
 
 - **Concurrent Features**: Automatic optimizations for better performance
@@ -273,6 +294,7 @@ Consistent error responses across all endpoints:
 
 ### State Management
 
+- **Routing State**: Managed by TanStack Router with type-safe navigation
 - **Better Auth State**: Managed by Better Auth React client
 - **API State**: Simple fetch-based state management
 - **Local State**: React hooks for component-specific state
