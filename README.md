@@ -1,41 +1,40 @@
 # HONC Stack Template with Better Auth
 
-A full-stack TypeScript template combining React 19 SPA with Cloudflare Workers backend.
+A full-stack TypeScript template combining a React 19 SPA with a Cloudflare Workers backend.
 
-The backend features the HONC stack: 
+The backend uses the HONC stack:
 - Hono OpenAPI
-- Drizzle ORM on D1 (sqlite)
-- Cloudflare. 
+- Drizzle ORM on D1 (SQLite)
+- Cloudflare Workers
 
-The `@cloudflare/vite-plugin` package makes everything deployable to Cloudflare.
+`@cloudflare/vite-plugin` enables deployment to Cloudflare.
 
-Docs on the HONC stack are here: https://docs.honc.dev
+Docs on the HONC stack: https://docs.honc.dev
 
-This template also uses GitHub OAuth authentication, implemented with Better Auth, since Better Auth has sensible adapters for both Hono and Drizzle.
+GitHub OAuth authentication is implemented with Better Auth.
 
 ## Tech Stack
 
 ### Frontend
-- **React 19** - Latest React with concurrent features
-- **TanStack Router** - Type-safe file-based routing with automatic code splitting
-- **TypeScript** - Full type safety
-- **Vite** - Fast build tool with HMR
-- **Better Auth Client** - Type-safe authentication
+- React 19 for UI
+- TanStack Router for file-based routing
+- TypeScript
+- Vite
+- Better Auth client
 
-### Backend  
-- **Cloudflare Workers** - Edge computing runtime
-- **Hono** - Ultra-fast web framework
-- **D1 Database** - Serverless SQLite
-- **Drizzle ORM** - Type-safe database operations
-- **Better Auth** - Modern authentication with GitHub OAuth
-- **OpenAPI** - Auto-generated API documentation
-- **Zod** - Runtime validation and schema generation
+### Backend
+- Cloudflare Workers runtime
+- Hono web framework
+- D1 database
+- Drizzle ORM
+- Better Auth for GitHub OAuth
+- OpenAPI with Zod schemas
 
 ### Development
-- **Biome** - Fast formatting and linting
-- **Vitest** - Testing with Cloudflare Workers pool
-- **TypeScript** - Strict type checking
-- **pnpm** - Fast package management
+- Biome for formatting and linting
+- Vitest for tests
+- TypeScript
+- pnpm
 
 ## Quick Start
 
@@ -46,8 +45,8 @@ pnpm install
 # Set up environment (see README.SETUP.md)
 cp .dev.vars.example .dev.vars  # Add your GitHub OAuth credentials
 
-# Generate auth schema and set up database
-pnpm auth:generate # you probably do not need to do this as the template has the schema already
+# Generate auth schema and set up database (optional if schema exists)
+pnpm auth:generate
 pnpm db:setup
 
 # Start development server
@@ -60,12 +59,3 @@ pnpm dev
 - **[Development Guide](README.DEVELOPMENT.md)** - Development commands, testing, code quality, and deployment
 - **[Architecture Guide](README.ARCHITECTURE.md)** - Project structure, authentication system, and API reference
 
-## Features
-
-- ✅ **GitHub OAuth** - Secure authentication with Better Auth
-- ✅ **Type-Safe APIs** - Full TypeScript coverage with Zod validation
-- ✅ **Type-Safe Routing** - File-based routing with TanStack Router
-- ✅ **Edge Computing** - Global performance with Cloudflare Workers
-- ✅ **Modern Stack** - React 19, TanStack Router, Hono, D1, and latest tooling
-- ✅ **Developer Experience** - Fast builds, hot reload, and comprehensive testing
-- ✅ **Production Ready** - Deployment automation and environment management

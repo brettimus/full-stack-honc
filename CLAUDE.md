@@ -16,6 +16,8 @@ If necessary, read/grep any `**/README.*.md` docs across the project for domain-
 
 You can also search in the `agent-docs/` folder for additional context on using libraries in the project.
 
+Keep README files up to date whenever major changes are introduced.
+
 ## ✅ Quality Gates
 
 When writing code, you must not finish until all of these succeed:
