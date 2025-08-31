@@ -21,12 +21,12 @@ export const ZUserSelect = createSelectSchema(schema.user)
     image: z.string().nullable().openapi({
       example: 'https://avatars.githubusercontent.com/u/12345?v=4',
     }),
-    createdAt: z.date().openapi({
-      example: new Date('2023-01-01T00:00:00Z'),
+    createdAt: z.string().datetime().openapi({
+      example: '2023-01-01T00:00:00Z',
       description: 'Creation timestamp',
     }),
-    updatedAt: z.date().openapi({
-      example: new Date('2023-01-01T00:00:00Z'),
+    updatedAt: z.string().datetime().openapi({
+      example: '2023-01-01T00:00:00Z',
       description: 'Last update timestamp',
     }),
   })
@@ -69,12 +69,12 @@ export const ZCommentSelect = createSelectSchema(schema.comments)
     userId: z.string().openapi({
       example: '3e0bb3d0-2074-4a1e-6263-d13dd10cb0cf',
     }),
-    createdAt: z.date().openapi({
-      example: new Date('2023-01-01T00:00:00Z'),
+    createdAt: z.string().datetime().openapi({
+      example: '2023-01-01T00:00:00Z',
       description: 'Creation timestamp',
     }),
-    updatedAt: z.date().openapi({
-      example: new Date('2023-01-01T00:00:00Z'),
+    updatedAt: z.string().datetime().openapi({
+      example: '2023-01-01T00:00:00Z',
       description: 'Last update timestamp',
     }),
   })

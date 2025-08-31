@@ -54,8 +54,8 @@ export const createAuth = (env: Env) => {
     },
     logger: {
       level: 'debug',
-      log: (level, message, ...args) => {
-        console.log(`[BetterAuth][${level}]`, message, ...args);
+      log: (_level, _message, ..._args) => {
+        // TODO: integrate with a proper logging solution
       },
     },
   });

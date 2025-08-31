@@ -1,34 +1,15 @@
-export interface User {
-  id: string;
-  name: string;
-  email: string;
-  emailVerified: boolean;
-  image?: string | null;
-  githubUsername?: string | null;
-  createdAt: number;
-  updatedAt: number;
-}
+import type { z } from 'zod';
+import type {
+  ZCommentInsert,
+  ZCommentSelect,
+  ZCommentWithUser,
+  ZUserSelect,
+} from '../worker/api/dtos/index.ts';
 
-export interface Comment {
-  id: string;
-  content: string;
-  userId: string;
-  createdAt: number;
-  updatedAt: number;
-}
-
-export interface CommentWithUser extends Comment {
-  user: {
-    id: string;
-    name: string;
-    githubUsername?: string | null;
-    image?: string | null;
-  };
-}
-
-export interface CreateCommentRequest {
-  content: string;
-}
+export type User = z.infer<typeof ZUserSelect>;
+export type Comment = z.infer<typeof ZCommentSelect>;
+export type CommentWithUser = z.infer<typeof ZCommentWithUser>;
+export type CreateCommentRequest = z.infer<typeof ZCommentInsert>;
 
 export interface ApiError {
   message: string;

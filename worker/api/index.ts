@@ -394,8 +394,7 @@ const app = new Hono<{ Bindings: Env; Variables: Variables }>()
     const auth = createAuth(c.env);
     try {
       return await auth.handler(c.req.raw);
-    } catch (error) {
-      console.error('Better Auth error:', error);
+    } catch (_error) {
       return c.text('Auth error', 500);
     }
   })
@@ -411,7 +410,6 @@ const app = new Hono<{ Bindings: Env; Variables: Variables }>()
   .route('/api', api);
 
 app.onError((error, c) => {
-  console.error(error);
   if (error instanceof HTTPException) {
     return c.json(
       {
@@ -457,5 +455,7 @@ app.use(
     openapi: { url: '/openapi.json' },
   })
 );
+
+export type AppType = typeof app;
 
 export default app;

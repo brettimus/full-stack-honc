@@ -38,8 +38,8 @@ export function CommentList({
     setEditContent('');
   };
 
-  const formatDate = (timestamp: number) => {
-    return new Date(timestamp).toLocaleString();
+  const formatDate = (dateStr: string) => {
+    return new Date(dateStr).toLocaleString();
   };
 
   if (comments.length === 0) {
@@ -137,7 +137,10 @@ export function CommentList({
 
             <div className="flex items-center space-x-2 text-xs text-muted-foreground">
               <span>{formatDate(comment.createdAt)}</span>
-              {comment.updatedAt > comment.createdAt && <span>• (edited)</span>}
+              {new Date(comment.updatedAt).getTime() >
+                new Date(comment.createdAt).getTime() && (
+                <span>• (edited)</span>
+              )}
             </div>
           </div>
         ))}

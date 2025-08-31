@@ -1,3 +1,5 @@
+import { hc } from 'hono/client';
+import type { AppType } from '../worker/api/index.ts';
 import type {
   ApiError,
   CommentWithUser,
@@ -5,84 +7,77 @@ import type {
   User,
 } from './types';
 
-interface HealthCheckResponse {
+export interface HealthCheckResponse {
   status: string;
   timestamp: string;
   database: string;
 }
 
-const API_BASE = '/api';
+const client = hc<AppType>(
+  typeof window !== 'undefined' ? window.location.origin : 'http://localhost'
+);
 
-class ApiClient {
-  private async request<T>(
-    endpoint: string,
-    options: RequestInit = {}
-  ): Promise<T> {
-    const response = await fetch(`${API_BASE}${endpoint}`, {
-      headers: {
-        'Content-Type': 'application/json',
-        ...options.headers,
-      },
-      ...options,
-    });
+const api = client.api;
 
-    if (!response.ok) {
-      const error: ApiError = await response.json().catch(() => ({
-        message: `HTTP ${response.status}: ${response.statusText}`,
-      }));
-      throw new Error(error.message);
-    }
-
-    // Handle 204 No Content responses
-    if (response.status === 204) {
-      return undefined as T;
-    }
-
-    return response.json();
+async function handleResponse<T>(res: Response): Promise<T> {
+  if (!res.ok) {
+    const error: ApiError = await res.json().catch(() => ({
+      message: `HTTP ${res.status}: ${res.statusText}`,
+    }));
+    throw new Error(error.message);
   }
 
+  if (res.status === 204) {
+    return undefined as T;
+  }
+
+  return res.json() as Promise<T>;
+}
+
+export const apiClient = {
   async getUsers(): Promise<User[]> {
-    return this.request<User[]>('/users');
-  }
+    const res = await api.users.$get();
+    return handleResponse<User[]>(res);
+  },
 
   async getUserById(id: string): Promise<User> {
-    return this.request<User>(`/users/${id}`);
-  }
+    const res = await api.users[':id'].$get({ param: { id } });
+    return handleResponse<User>(res);
+  },
 
   async getComments(): Promise<CommentWithUser[]> {
-    return this.request<CommentWithUser[]>('/comments');
-  }
+    const res = await api.comments.$get();
+    return handleResponse<CommentWithUser[]>(res);
+  },
 
   async createComment(comment: CreateCommentRequest): Promise<CommentWithUser> {
-    return this.request<CommentWithUser>('/comments', {
-      method: 'POST',
-      body: JSON.stringify(comment),
-    });
-  }
+    const res = await api.comments.$post({ json: comment });
+    return handleResponse<CommentWithUser>(res);
+  },
 
   async getCommentById(id: string): Promise<CommentWithUser> {
-    return this.request<CommentWithUser>(`/comments/${id}`);
-  }
+    const res = await api.comments[':id'].$get({ param: { id } });
+    return handleResponse<CommentWithUser>(res);
+  },
 
   async updateComment(
     id: string,
     comment: Partial<CreateCommentRequest>
   ): Promise<CommentWithUser> {
-    return this.request<CommentWithUser>(`/comments/${id}`, {
-      method: 'PUT',
-      body: JSON.stringify(comment),
+    const res = await api.comments[':id'].$put({
+      param: { id },
+      json: comment,
     });
-  }
+    return handleResponse<CommentWithUser>(res);
+  },
 
   async deleteComment(id: string): Promise<void> {
-    return this.request<void>(`/comments/${id}`, {
-      method: 'DELETE',
-    });
-  }
+    const res = await api.comments[':id'].$delete({ param: { id } });
+    await handleResponse<void>(res);
+  },
 
   async healthCheck(): Promise<HealthCheckResponse> {
-    return this.request<HealthCheckResponse>('/health');
-  }
-}
-
-export const apiClient = new ApiClient();
+    const res = await api.health.$get();
+    return handleResponse<HealthCheckResponse>(res);
+  },
+};
