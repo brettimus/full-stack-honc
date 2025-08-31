@@ -1,13 +1,13 @@
 # Setup Guide
 
-Complete setup instructions for the HONC Stack template with Better Auth.
+Setup instructions for the HONC stack template.
 
 ## Prerequisites
 
-- **Node.js 18+** - Required for development
-- **pnpm** - Package manager (faster than npm/yarn)
-- **GitHub Account** - For OAuth authentication
-- **Cloudflare Account** - For deployment (optional for local development)
+- Node.js 18+
+- pnpm
+- GitHub account for OAuth
+- Cloudflare account for deployment (optional)
 
 ## Installation
 
@@ -47,75 +47,33 @@ GITHUB_CLIENT_ID=your-github-oauth-app-client-id
 GITHUB_CLIENT_SECRET=your-github-oauth-app-client-secret
 ```
 
-**Important Notes:**
-- Replace `BETTER_AUTH_SECRET` with a secure random string (at least 32 characters)
-- Use your actual GitHub OAuth app Client ID and Client Secret
-- Keep `.dev.vars` private - it's already in `.gitignore`
-
-**Generate a secure secret:**
-```bash
-# Option 1: Use Node.js
-node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
-
-# Option 2: Use OpenSSL  
-openssl rand -hex 32
-
-# Option 3: Use a password manager or online generator
-```
+Replace `BETTER_AUTH_SECRET` with a secure random string and keep `.dev.vars` private.
 
 ### 3. Authentication Setup
 
-Generate the Better Auth database schema:
+Generate the auth schema if needed:
 
 ```bash
 pnpm auth:generate
 ```
 
-This command:
-- Reads your `better-auth.config.ts` configuration
-- Generates authentication database tables (user, session, account, verification)
-- Creates the necessary schema files
-
 ### 4. Database Setup
 
-Set up your local D1 database:
+Set up the local D1 database:
 
 ```bash
-# Complete database setup (recommended)
 pnpm db:setup
-```
-
-This runs:
-1. `pnpm db:touch` - Creates/verifies database connection
-2. `pnpm db:migrate` - Applies all migrations
-3. `pnpm db:seed` - Seeds database with sample data
-
-**Individual commands (if needed):**
-```bash
-pnpm db:touch      # Create/verify database connection
-pnpm db:generate   # Generate new migrations from schema changes  
-pnpm db:migrate    # Apply migrations to local database
-pnpm db:seed       # Seed database with sample data
-pnpm db:studio     # Open Drizzle Studio (database GUI)
 ```
 
 ## Verification
 
-### 1. Start Development Servers
+### 1. Start Development Server
 
 ```bash
-# Terminal 1: Start React frontend
 pnpm dev
-
-# Terminal 2: Start Cloudflare Worker backend  
-pnpm worker:dev
 ```
 
-### 2. Test the Setup
-
-1. **Frontend and API**: Visit `http://localhost:4284` - Should show the React app
-2. **Authentication**: Click "Sign in with GitHub" - Should redirect to GitHub OAuth
-3. **OpenAPI Docs**: Visit `http://localhost:4284/openapi.json` - API specification
+Visit `http://localhost:4284` for the app and `http://localhost:4284/openapi.json` for API docs.
 
 ### 3. Database Verification
 
@@ -124,10 +82,7 @@ pnpm worker:dev
 pnpm db:studio
 ```
 
-You should see:
-- **Application tables**
-- **Auth tables** (user, session, account, verification)
-- **Sample data** (if you ran the seed command)
+You should see application tables, auth tables, and sample data if seeded.
 
 ## Troubleshooting
 
@@ -144,30 +99,30 @@ You should see:
 - Verify `better-auth.config.ts` configuration is correct
 
 **❌ TypeScript errors**
-- Run `pnpm install` to ensure all dependencies are installed
-- Check that you're using Node.js 22+ and latest pnpm version
-- Try restarting your TypeScript language server
+- Run `pnpm install`
+- Ensure you're using Node.js 18+ and latest pnpm
+- Restart your TypeScript language server
 
 ### Getting Help
 
-1. **Check logs**: Look at terminal output for specific error messages
-2. **Database inspection**: Use `pnpm db:studio` to inspect database state
-3. **Configuration**: Verify all files in the checklist below
+1. Check logs for error messages
+2. Use `pnpm db:studio` to inspect database state
+3. Verify configuration files
 
 ## Configuration Checklist
 
-Before proceeding to development, ensure you have:
+Before development, ensure:
 
-- [ ] `.dev.vars` file with all required environment variables
-- [ ] GitHub OAuth app created with correct callback URL
-- [x] Auth schema generated (`pnpm auth:generate`)
-- [ ] Database set up and migrated (`pnpm db:setup`)
-- [ ] Dev server running without errors
-- [ ] GitHub OAuth sign-in working
-- [ ] Database accessible via Drizzle Studio
+- `.dev.vars` with required variables
+- GitHub OAuth app with correct callback URL
+- Auth schema generated (`pnpm auth:generate`)
+- Database set up (`pnpm db:setup`)
+- Dev server runs without errors
+- GitHub OAuth sign-in works
+- Database accessible via Drizzle Studio
 
 ## Next Steps
 
 Once setup is complete, see:
-- **[Development Guide](README.DEVELOPMENT.md)** - Development workflow and commands
-- **[Architecture Guide](README.ARCHITECTURE.md)** - Understanding the codebase structure
+- [Development Guide](README.DEVELOPMENT.md)
+- [Architecture Guide](README.ARCHITECTURE.md)
