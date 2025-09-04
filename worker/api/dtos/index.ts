@@ -113,7 +113,7 @@ export const ZCommentWithUser = ZCommentSelect.extend({
     name: true,
     githubUsername: true,
     image: true,
-  }),
+  }).nullable(),
 }).openapi({
   ref: 'CommentWithUser',
 });

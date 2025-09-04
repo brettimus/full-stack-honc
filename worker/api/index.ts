@@ -262,7 +262,7 @@ const api = new Hono<{ Bindings: Env; Variables: Variables }>()
         .where(eq(schema.comments.id, id));
 
       if (!comment) {
-        return c.notFound();
+        return c.json({ message: 'Comment not found' }, 404);
       }
 
       return c.json(comment);
@@ -303,7 +303,7 @@ const api = new Hono<{ Bindings: Env; Variables: Variables }>()
         .where(eq(schema.comments.id, id));
 
       if (!existingComment) {
-        return c.notFound();
+        return c.json({ message: 'Comment not found' }, 404);
       }
 
       if (existingComment.userId !== user.id) {

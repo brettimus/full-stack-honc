@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { apiClient } from '../api';
+import { apiClient } from '../lib/api';
 
 export function ApiStatus() {
   const [status, setStatus] = useState<
