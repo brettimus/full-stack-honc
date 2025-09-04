@@ -64,8 +64,7 @@ export async function authMiddleware(
 
     c.set('user', session.user as Variables['user']);
     await next();
-  } catch (error) {
-    console.error('Auth middleware error:', error);
+  } catch (_error) {
     return c.redirect('/api/auth/sign-in/github');
   }
 }

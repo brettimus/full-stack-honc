@@ -11,7 +11,7 @@ import type { z } from 'zod';
  */
 export const zodValidator = <
   Target extends keyof ValidationTargets,
-  Schema extends z.ZodType<any>,
+  Schema extends z.ZodType<unknown>,
 >(
   target: Target,
   schema: Schema

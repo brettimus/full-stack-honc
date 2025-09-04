@@ -38,8 +38,8 @@ export function CommentList({
     setEditContent('');
   };
 
-  const formatDate = (timestamp: number) => {
-    return new Date(timestamp).toLocaleString();
+  const formatDate = (dateStr: string) => {
+    return new Date(dateStr).toLocaleString();
   };
 
   if (comments.length === 0) {
@@ -65,7 +65,7 @@ export function CommentList({
           >
             <div className="mb-3 flex items-start justify-between">
               <div className="flex items-center space-x-3">
-                {comment.user.image && (
+                {comment.user?.image && (
                   <img
                     src={comment.user.image}
                     alt={comment.user.name}
@@ -73,10 +73,12 @@ export function CommentList({
                   />
                 )}
                 <div>
-                  <div className="font-medium">{comment.user.name}</div>
-                  {comment.user.githubUsername && (
+                  <div className="font-medium">
+                    {comment.user?.name ?? 'Unknown'}
+                  </div>
+                  {comment.user?.githubUsername && (
                     <div className="text-xs text-muted-foreground">
-                      @{comment.user.githubUsername}
+                      @{comment.user?.githubUsername ?? 'Unknown'}
                     </div>
                   )}
                 </div>
@@ -137,7 +139,10 @@ export function CommentList({
 
             <div className="flex items-center space-x-2 text-xs text-muted-foreground">
               <span>{formatDate(comment.createdAt)}</span>
-              {comment.updatedAt > comment.createdAt && <span>• (edited)</span>}
+              {new Date(comment.updatedAt).getTime() >
+                new Date(comment.createdAt).getTime() && (
+                <span>• (edited)</span>
+              )}
             </div>
           </div>
         ))}

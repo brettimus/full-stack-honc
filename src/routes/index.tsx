@@ -1,12 +1,12 @@
-import { createFileRoute } from '@tanstack/react-router';
-import { useCallback, useEffect, useState } from 'react';
-import { apiClient } from '@/api';
 import { AuthCard } from '@/components/AuthCard';
 import { CommentForm } from '@/components/CommentForm';
 import { CommentList } from '@/components/CommentList';
 import { Button } from '@/components/ui/button';
+import { apiClient } from '@/lib/api/api';
 import { useSession } from '@/lib/auth';
 import type { CommentWithUser, CreateCommentRequest } from '@/types';
+import { createFileRoute } from '@tanstack/react-router';
+import { useCallback, useEffect, useState } from 'react';
 
 export const Route = createFileRoute('/')({
   component: Index,
