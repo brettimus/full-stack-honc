@@ -65,7 +65,7 @@ export function CommentList({
           >
             <div className="mb-3 flex items-start justify-between">
               <div className="flex items-center space-x-3">
-                {comment.user.image && (
+                {comment.user?.image && (
                   <img
                     src={comment.user.image}
                     alt={comment.user.name}
@@ -73,10 +73,12 @@ export function CommentList({
                   />
                 )}
                 <div>
-                  <div className="font-medium">{comment.user.name}</div>
-                  {comment.user.githubUsername && (
+                  <div className="font-medium">
+                    {comment.user?.name ?? 'Unknown'}
+                  </div>
+                  {comment.user?.githubUsername && (
                     <div className="text-xs text-muted-foreground">
-                      @{comment.user.githubUsername}
+                      @{comment.user?.githubUsername ?? 'Unknown'}
                     </div>
                   )}
                 </div>
