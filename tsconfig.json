@@ -14,11 +14,12 @@
 			"path": "./tsconfig.worker-tests.json"
 		}
 	],
-  // Needed for shadcn
+  // Needed for shadcn and cross-project type sharing
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["./src/*"],
+      "@/worker": ["./worker/api/index.ts"]
     }
   }
 }

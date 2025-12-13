@@ -1,7 +1,7 @@
 import { hc } from 'hono/client';
-import type { AppType } from '../../../worker/api/index.ts';
-import type { CreateCommentRequest } from '../../types.ts';
-import { handleResponse } from './handle-response.ts';
+import type { CreateCommentRequest } from '@/types';
+import type { AppType } from '@/worker';
+import { handleResponse } from './handle-response';
 
 const client = hc<AppType>(
   typeof window !== 'undefined' ? window.location.origin : 'http://localhost'

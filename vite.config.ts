@@ -19,6 +19,7 @@ export default defineConfig({
   ],
   resolve: {
     alias: {
+      '@/worker': path.resolve(__dirname, './worker/api/index.ts'),
       '@': path.resolve(__dirname, './src'),
     },
   },

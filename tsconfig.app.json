@@ -26,7 +26,8 @@
     /* Path resolution */
     "baseUrl": ".",
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["./src/*"],
+      "@/worker": ["./worker/api/index.ts"]
     }
   },
   "include": ["src"]
