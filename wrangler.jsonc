@@ -13,7 +13,8 @@
     "not_found_handling": "single-page-application"
   },
   "vars": {
-    "BETTER_AUTH_URL": "https://hackday-cf-vite-setup.your-subdomain.workers.dev"
+    "BETTER_AUTH_URL": "https://hackday-cf-vite-setup.your-subdomain.workers.dev",
+    "ENVIRONMENT": "development"
   },
   "observability": {
     "enabled": true

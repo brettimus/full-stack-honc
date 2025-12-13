@@ -11,6 +11,9 @@ importers:
       '@fiberplane/hono':
         specifier: 0.5.2
         version: 0.5.2(@hono/zod-openapi@0.18.4(hono@4.9.5)(zod@4.1.13))(@standard-schema/spec@1.0.0)(hono@4.9.5)
+      '@logtape/logtape':
+        specifier: ^1.2.2
+        version: 1.2.2
       '@radix-ui/react-slot':
         specifier: ^1.2.3
         version: 1.2.3(@types/react@19.1.12)(react@19.1.1)
@@ -1432,6 +1435,9 @@ packages:
     resolution: {integrity: sha512-7pJzOWzPm6oJUxml+PCDRzYQ4A1hTMHAciTAHfFK4fkbDZX33nWPVG7Y3vqdKtslcwAzwmrNDc6sXy2nwWnbiw==}
     cpu: [x64]
     os: [win32]
+
+  '@logtape/logtape@1.2.2':
+    resolution: {integrity: sha512-yx4uj7NUXo5pOk2lljtAf7UN9oDBw9xfxSDC4jxdbfnGDGmq4iJhenWBbU9XV8ilm8AUUMYXq2nk+qvz8E21DA==}
 
   '@modelcontextprotocol/sdk@1.17.4':
     resolution: {integrity: sha512-zq24hfuAmmlNZvik0FLI58uE5sriN0WWsQzIlYnzSuKDAHFqJtBFrl/LfB1NLgJT5Y7dEBzaX4yAKqOPrcetaw==}
@@ -5493,6 +5499,8 @@ snapshots:
 
   '@libsql/win32-x64-msvc@0.4.7':
     optional: true
+
+  '@logtape/logtape@1.2.2': {}
 
   '@modelcontextprotocol/sdk@1.17.4':
     dependencies:
