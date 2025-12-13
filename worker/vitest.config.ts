@@ -15,11 +15,11 @@ export default defineWorkersConfig(async () => {
 
   return {
     test: {
-      setupFiles: ['./tests/setup.ts'],
+      setupFiles: ['./worker/tests/setup.ts'],
       globals: true,
       poolOptions: {
         workers: {
-          wrangler: { configPath: './wrangler.jsonc' },
+          wrangler: { configPath: '../wrangler.test.jsonc' },
           miniflare: {
             compatibilityFlags: ['nodejs_compat'],
             compatibilityDate: '2025-08-29',

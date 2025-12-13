@@ -1,0 +1,22 @@
+/**
+ * Wrangler config for testing - no assets configuration needed.
+ * The main wrangler.jsonc is used for deployment.
+ */
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "hackday-cf-vite-setup",
+  "main": "worker/api/index.ts",
+  "compatibility_date": "2025-08-29",
+  "compatibility_flags": ["nodejs_compat"],
+  "vars": {
+    "BETTER_AUTH_URL": "http://localhost:5173"
+  },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "honc-d1-database",
+      "database_id": "local-honc-d1-database",
+      "migrations_dir": "worker/drizzle/migrations"
+    }
+  ]
+}

@@ -29,3 +29,6 @@ dist-ssr
 !.dev.vars.example
 .env*
 !.env.example
+
+# FP snapshot directory (isolated git repo for workdir snapshots)
+.fp/snapshots/

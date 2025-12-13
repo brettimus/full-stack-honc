@@ -1,0 +1,13 @@
+{
+  "extraKnownMarketplaces": {
+    "fiberplane-claude-code-plugins": {
+      "source": {
+        "source": "github",
+        "repo": "fiberplane/claude-code-plugins"
+      }
+    }
+  },
+  "enabledPlugins": {
+    "fp-agent@fiberplane-claude-code-plugins": true
+  }
+}

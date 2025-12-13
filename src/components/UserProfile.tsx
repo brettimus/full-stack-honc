@@ -1,5 +1,5 @@
 import { Button } from '@/components/ui/button';
-import { authClient, type AuthUser } from '@/lib/auth';
+import { type AuthUser, authClient } from '@/lib/auth';
 
 export function UserProfile({ user }: { user: AuthUser }) {
   const handleSignOut = async () => {
