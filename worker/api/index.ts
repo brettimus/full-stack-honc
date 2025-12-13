@@ -14,8 +14,11 @@ import {
   ZUserSelect,
 } from './dtos';
 import { createAuth } from './lib/auth';
+import { prepareErrorForLogging } from './lib/errors';
+import { apiLogger } from './lib/logger';
 import { authMiddleware } from './middleware/auth';
 import { dbProvider } from './middleware/dbProvider';
+import { requestLogger } from './middleware/requestLogger';
 import { zodValidator } from './middleware/validator';
 
 interface Env {
@@ -64,12 +67,16 @@ const api = new Hono<{ Bindings: Env; Variables: Variables }>()
       // Test database connection
       try {
         await db.select().from(schema.comments).limit(1);
+        apiLogger.debug('Health check passed', { database: 'connected' });
         return c.json({
           status: 'healthy',
           timestamp: new Date().toISOString(),
           database: 'connected',
         });
-      } catch (_error) {
+      } catch (error) {
+        apiLogger.warn('Health check database error', {
+          error: error instanceof Error ? error.message : String(error),
+        });
         return c.json({
           status: 'healthy',
           timestamp: new Date().toISOString(),
@@ -389,6 +396,8 @@ const api = new Hono<{ Bindings: Env; Variables: Variables }>()
   );
 
 const app = new Hono<{ Bindings: Env; Variables: Variables }>()
+  // Request logging middleware - runs first
+  .use('*', requestLogger)
   // Better Auth routes - MUST come first and bypass auth middleware
   .on(['GET', 'POST'], '/api/auth/**', async (c) => {
     const auth = createAuth(c.env);
@@ -410,7 +419,16 @@ const app = new Hono<{ Bindings: Env; Variables: Variables }>()
   .route('/api', api);
 
 app.onError((error, c) => {
+  const path = new URL(c.req.url).pathname;
+  const method = c.req.method;
+
   if (error instanceof HTTPException) {
+    apiLogger.warn('HTTP exception', {
+      method,
+      path,
+      status: error.status,
+      message: error.message,
+    });
     return c.json(
       {
         message: error.message,
@@ -418,6 +436,12 @@ app.onError((error, c) => {
       error.status
     );
   }
+
+  apiLogger.error('Unhandled error', {
+    method,
+    path,
+    error: prepareErrorForLogging(error),
+  });
 
   return c.json(
     {

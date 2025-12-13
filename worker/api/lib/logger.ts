@@ -2,6 +2,7 @@ import { env } from 'cloudflare:workers';
 import {
   configure,
   getConsoleSink,
+  getLogger,
   getAnsiColorFormatter as getLogtapeAnsiColorFormatter,
   jsonLinesFormatter,
 } from '@logtape/logtape';
@@ -62,3 +63,8 @@ await configure({
     },
   ],
 });
+
+// Export loggers for different parts of the application
+export const logger = getLogger(['honc']);
+export const apiLogger = getLogger(['honc', 'api']);
+export const authLogger = getLogger(['honc', 'auth']);

@@ -1,5 +1,6 @@
 import type { Context } from 'hono';
 import { createAuth } from '../lib/auth';
+import { authLogger } from '../lib/logger';
 import { isAllowedGitHubUsername } from '../utils/allow-list';
 
 interface SessionUser {
@@ -51,6 +52,9 @@ export async function authMiddleware(
     });
 
     if (!session) {
+      authLogger.debug('No session found, redirecting to sign-in', {
+        path: pathname,
+      });
       return c.redirect('/api/auth/sign-in/github');
     }
 
@@ -59,12 +63,22 @@ export async function authMiddleware(
       session.user as SessionUser
     )?.githubUsername?.toLowerCase();
     if (githubUsername && !isAllowedGitHubUsername(githubUsername)) {
+      authLogger.warn('User not in allowlist', { githubUsername });
       return c.text('Forbidden – ask admin for access', 403);
     }
 
+    authLogger.debug('Session validated', {
+      userId: session.user.id,
+      path: pathname,
+    });
+
     c.set('user', session.user as Variables['user']);
     await next();
-  } catch (_error) {
+  } catch (error) {
+    authLogger.error('Session validation failed', {
+      path: pathname,
+      error: error instanceof Error ? error.message : String(error),
+    });
     return c.redirect('/api/auth/sign-in/github');
   }
 }
