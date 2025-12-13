@@ -18,9 +18,17 @@ export default defineConfig({
     cloudflare(),
   ],
   resolve: {
-    alias: {
-      '@/worker': path.resolve(__dirname, './worker/api/index.ts'),
-      '@': path.resolve(__dirname, './src'),
-    },
+    alias: [
+      // More specific patterns first
+      {
+        find: '@/worker/schemas',
+        replacement: path.resolve(__dirname, './worker/schemas'),
+      },
+      {
+        find: '@/worker',
+        replacement: path.resolve(__dirname, './worker/api/index.ts'),
+      },
+      { find: '@', replacement: path.resolve(__dirname, './src') },
+    ],
   },
 });

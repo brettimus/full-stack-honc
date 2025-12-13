@@ -19,7 +19,8 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"],
-      "@/worker": ["./worker/api/index.ts"]
+      "@/worker": ["./worker/api/index.ts"],
+      "@/worker/*": ["./worker/*"]
     }
   }
 }
