@@ -1,34 +1,12 @@
 import type { Context } from 'hono';
 import { createAuth } from '../lib/auth';
+import type { AuthUser } from '../lib/auth/types';
 import { authLogger } from '../lib/logger';
+import type { HonoAppType } from '../types';
 import { isAllowedGitHubUsername } from '../utils/allow-list';
 
-interface SessionUser {
-  id: string;
-  name?: string;
-  email?: string;
-  githubUsername?: string;
-}
-
-interface Env {
-  DB: D1Database;
-  BETTER_AUTH_URL: string;
-  BETTER_AUTH_SECRET: string;
-  GITHUB_CLIENT_ID?: string;
-  GITHUB_CLIENT_SECRET?: string;
-}
-
-type Variables = {
-  user: {
-    id: string;
-    name: string;
-    email?: string;
-    githubUsername?: string;
-  };
-};
-
 export async function authMiddleware(
-  c: Context<{ Bindings: Env; Variables: Variables }>,
+  c: Context<HonoAppType>,
   next: () => Promise<void>
 ) {
   const auth = createAuth(c.env);
@@ -59,20 +37,19 @@ export async function authMiddleware(
     }
 
     // Optional: Check allowlist
-    const githubUsername = (
-      session.user as SessionUser
-    )?.githubUsername?.toLowerCase();
+    const user = session.user as AuthUser;
+    const githubUsername = user?.githubUsername?.toLowerCase();
     if (githubUsername && !isAllowedGitHubUsername(githubUsername)) {
       authLogger.warn('User not in allowlist', { githubUsername });
       return c.text('Forbidden – ask admin for access', 403);
     }
 
     authLogger.debug('Session validated', {
-      userId: session.user.id,
+      userId: user.id,
       path: pathname,
     });
 
-    c.set('user', session.user as Variables['user']);
+    c.set('user', user);
     await next();
   } catch (error) {
     authLogger.error('Session validation failed', {

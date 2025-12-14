@@ -20,25 +20,9 @@ import { authMiddleware } from './middleware/auth';
 import { dbProvider } from './middleware/dbProvider';
 import { requestLogger } from './middleware/requestLogger';
 import { zodValidator } from './middleware/validator';
+import type { HonoAppType } from './types';
 
-interface Env {
-  DB: D1Database;
-  BETTER_AUTH_URL: string;
-  BETTER_AUTH_SECRET: string;
-  GITHUB_CLIENT_ID?: string;
-  GITHUB_CLIENT_SECRET?: string;
-}
-
-type Variables = {
-  user: {
-    id: string;
-    name: string;
-    email?: string;
-    githubUsername?: string;
-  };
-};
-
-const api = new Hono<{ Bindings: Env; Variables: Variables }>()
+const api = new Hono<HonoAppType>()
   .use('*', dbProvider)
   .get(
     '/health',
@@ -395,7 +379,7 @@ const api = new Hono<{ Bindings: Env; Variables: Variables }>()
     }
   );
 
-const app = new Hono<{ Bindings: Env; Variables: Variables }>()
+const app = new Hono<HonoAppType>()
   // Request logging middleware - runs first
   .use('*', requestLogger)
   // Better Auth routes - MUST come first and bypass auth middleware
