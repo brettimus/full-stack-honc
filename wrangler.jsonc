@@ -26,6 +26,29 @@
       "database_id": "local-honc-d1-database",
       "migrations_dir": "worker/drizzle/migrations"
     }
+  ],
+  /**
+   * Durable Objects
+   * Agent classes are deployed as Durable Objects with SQLite storage.
+   * https://developers.cloudflare.com/durable-objects/
+   */
+  "durable_objects": {
+    "bindings": [
+      {
+        "name": "MyAgent",
+        "class_name": "MyAgent"
+      }
+    ]
+  },
+  /**
+   * Migrations for Durable Object classes
+   * Each new agent class requires a migration with new_sqlite_classes
+   */
+  "migrations": [
+    {
+      "tag": "v1",
+      "new_sqlite_classes": ["MyAgent"]
+    }
   ]
   /**
    * Smart Placement
